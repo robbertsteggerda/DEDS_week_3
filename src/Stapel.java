@@ -16,7 +16,7 @@ public class Stapel<T>{
         return this;
     }
     public T pak() {
-        if (bovenkant.waarde == null){
+        if (bovenkant == null){
             throw new IllegalArgumentException("stapel is leeg");
         }
         T data = bovenkant.waarde;
