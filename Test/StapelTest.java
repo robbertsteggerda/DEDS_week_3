@@ -1,6 +1,8 @@
 import org.junit.jupiter.api.*;
 
 public class StapelTest {
+    //Ik heb hier vier tests die eigenlijk hetzelfde doen maar met verschillende datatypes (waaronder ook null).
+    //Ik test "duw" en "pak" allebei in één test omdat ik zonder "pak" niet bij de data in de stapel kan.
     @Test
     public void testDuw1() throws LegeStapelException {
         Stapel stapel = new Stapel();
