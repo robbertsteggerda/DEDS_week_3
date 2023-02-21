@@ -28,5 +28,5 @@ public class Stapel<T>{
 class LegeStapelException extends Exception {
     public LegeStapelException(){
         super("Stapel is leeg");
-    };
+    }
 }
