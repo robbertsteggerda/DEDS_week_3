@@ -2,6 +2,7 @@ import java.util.Scanner;
 import java.util.Random;
 
 public class Bord {
+    private static final int SPEELVELD_GROOTTE = 7;
     private char[][] speelveld;
     private boolean spelVoorbij;
 
@@ -25,7 +26,7 @@ public class Bord {
     }
 
     public static void startSpel() {
-        Bord bord = new Bord(7,7);
+        Bord bord = new Bord(SPEELVELD_GROOTTE,SPEELVELD_GROOTTE);
         bord.zetBeginStand();
         char huidigeSpeler = kiesBeginnendeSpeler();
         while(!bord.spelVoorbij) {
@@ -60,8 +61,8 @@ public class Bord {
     }
 
     private void zetBeginStand(){
-        for (int x = 0; x < 7; x++) {
-            for (int y = 0; y < 7; y++) {
+        for (int x = 0; x < SPEELVELD_GROOTTE; x++) {
+            for (int y = 0; y < SPEELVELD_GROOTTE; y++) {
                 this.setWaarde(x,y,'x');
             }
         }
@@ -92,29 +93,48 @@ public class Bord {
                 return(huidigeSpeler);
             } else{
                 this.setWaarde(doelX,doelY,huidigeSpeler);
+                vervangAangrenzendAanTegenstander(doelX,doelY,huidigeSpeler);
                 return(wisselSpeler(huidigeSpeler));
             }
-
             }
 
         public static boolean isBuitenSpeelveld(int getal){
             return getal < 0 || getal > 6;
     }
     public boolean isAangrenzendAanHuidigeSpeler(int x,int y,char huidigeSpeler){
-        if(this.getWaarde(x,y) == huidigeSpeler ){
+        if(this.getWaarde(x,y) != 'x' ){
             return false;
-        } else if(this.getWaarde(x-1,y) == huidigeSpeler || this.getWaarde(x+1,y) == huidigeSpeler || this.getWaarde(x,y-1) == huidigeSpeler || this.getWaarde(x,y+1) == huidigeSpeler || this.getWaarde(x-1,y-1) == huidigeSpeler || this.getWaarde(x-1,y+1) == huidigeSpeler || this.getWaarde(x+1,y-1) == huidigeSpeler | this.getWaarde(x+1,y+1) == huidigeSpeler){
+        } else if(this.getWaarde(x-1,y) == huidigeSpeler || this.getWaarde(x+1,y) == huidigeSpeler || this.getWaarde(x,y-1) == huidigeSpeler || this.getWaarde(x,y+1) == huidigeSpeler || this.getWaarde(x-1,y-1) == huidigeSpeler || this.getWaarde(x-1,y+1) == huidigeSpeler || this.getWaarde(x+1,y-1) == huidigeSpeler || this.getWaarde(x+1,y+1) == huidigeSpeler){
             return true;
         }else
         return false;
+    }
+
+    public void vervangAangrenzendAanTegenstander(int x,int y,char huidigeSpeler){
+    char tegenstander = wisselSpeler(huidigeSpeler);
+        if(this.getWaarde(x-1,y) == tegenstander){
+            this.setWaarde(x-1,y,huidigeSpeler);
+        }else if(this.getWaarde(x+1,y) == tegenstander){
+            this.setWaarde(x+1,y,huidigeSpeler);
+        }else if(this.getWaarde(x,y-1) == tegenstander){
+            this.setWaarde(x,y-1,huidigeSpeler);
+        }else if(this.getWaarde(x,y+1) == tegenstander){
+            this.setWaarde(x,+1,huidigeSpeler);
+        }else if(this.getWaarde(x+1,y+1) == tegenstander){
+            this.setWaarde(x+1,y+1,huidigeSpeler);
+        }else if(this.getWaarde(x-1,y-1) == tegenstander){
+            this.setWaarde(x-1,y-1,huidigeSpeler);
+        }else if(this.getWaarde(x+1,y-1) == tegenstander){
+            this.setWaarde(x+1,y-1,huidigeSpeler);
+        }else if(this.getWaarde(x-1,y+1) == tegenstander){
+            this.setWaarde(x-1,y+1,huidigeSpeler);
+        }
     }
 
     public static char wisselSpeler(char huidigeSpeler){
         if(huidigeSpeler == 'H'){
             return 'B';
         }
-        else{
-            return 'H';
-        }
+        return 'H';
     }
 }
