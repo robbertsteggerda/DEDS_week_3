@@ -1,3 +1,4 @@
+import java.sql.SQLOutput;
 import java.util.Scanner;
 import java.util.Random;
 
@@ -89,11 +90,43 @@ public class Bord {
                 int doelY = scanner.nextInt();
                 System.out.println("voer het x coordinaat van je doel in: ");
                 int doelX = scanner.nextInt();
+                if(Spel.isBuitenSpeelveld(doelX) || Spel.isBuitenSpeelveld(doelY)) {
+                    System.out.println("De gekozen coördinaten liggen buiten het speelveld! Kies opnieuw a.u.b.");
+                    return (huidigeSpeler);
+                }
+                    if(Spel.isBuitenSpeelveld(startX) || Spel.isBuitenSpeelveld(startY)) {
+                        System.out.println("De gekozen coördinaten liggen buiten het speelveld! Kies opnieuw a.u.b.");
+                        return huidigeSpeler;
+                    }
+                    if(!isVeldVrij(doelX,doelY)){
+                        System.out.println("Illegale zet! Dit veld is al bezet. Kies opnieuw.");
+                        return huidigeSpeler;
+                    }
+                    if(!isStartVanHuidigeSpeler(startX,startY,huidigeSpeler)){
+                        System.out.println("Illegale zet! Het startveld is niet van jou. Kies opnieuw.");
+                        return huidigeSpeler;
+                    }
+                    setWaarde(startX,startY,'x');
+                    this.setWaarde(doelX,doelY,huidigeSpeler);
+                    vervangAangrenzendAanTegenstander(doelX,doelY,huidigeSpeler);
                 return(Spel.wisselSpeler(huidigeSpeler));
             }
 
+            public boolean isStartVanHuidigeSpeler(int x, int y,char huidigeSpeler){
+        if (this.getWaarde(x,y) == huidigeSpeler){
+            return true;
+        }
+                System.out.println(this.getWaarde(x,y));
+        return false;
+            }
+            public boolean isVeldVrij(int x,int y) {
+                if (this.getWaarde(x, y) == 'x') {
+                    return true;
+                }
+                return false;
+            }
     public boolean isAangrenzendAanHuidigeSpeler(int x,int y,char huidigeSpeler){
-        if(this.getWaarde(x,y) != 'x' ){
+        if(!isVeldVrij(x,y)){
             return false;
         } else if(this.getWaarde(x-1,y) == huidigeSpeler || this.getWaarde(x+1,y) == huidigeSpeler || this.getWaarde(x,y-1) == huidigeSpeler || this.getWaarde(x,y+1) == huidigeSpeler || this.getWaarde(x-1,y-1) == huidigeSpeler || this.getWaarde(x-1,y+1) == huidigeSpeler || this.getWaarde(x+1,y-1) == huidigeSpeler || this.getWaarde(x+1,y+1) == huidigeSpeler){
             return true;
