@@ -6,6 +6,10 @@ public class Bord {
     private boolean spelVoorbij;
     private char[][] speelveld;
 
+    public void setSpelVoorbij(){
+        this.spelVoorbij = true;
+    }
+
     public boolean isSpelVoorbij(){
         return this.spelVoorbij;
     }
@@ -146,7 +150,7 @@ public class Bord {
             this.setWaarde(x,y-1,huidigeSpeler);
         }
         if(this.getWaarde(x,y+1) == tegenstander){
-            this.setWaarde(x,+1,huidigeSpeler);
+            this.setWaarde(x,y+1,huidigeSpeler);
         }
         if(this.getWaarde(x+1,y+1) == tegenstander){
             this.setWaarde(x+1,y+1,huidigeSpeler);

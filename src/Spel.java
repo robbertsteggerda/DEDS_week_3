@@ -3,6 +3,9 @@ import java.util.Scanner;
 
 public class Spel {
     public static final int SPEELVELD_GROOTTE = 7;
+    public static int Bteller;
+    public static int Hteller;
+    private static int xteller;
 
     private static char kiesBeginnendeSpeler() {
         Random random = new Random();
@@ -21,6 +24,10 @@ public class Spel {
         bord.zetBeginStand();
         char huidigeSpeler = kiesBeginnendeSpeler();
         while(!bord.isSpelVoorbij()) {
+            Bteller = 0;
+            Hteller = 0;
+            xteller = 0;
+
             bord.printBord();
             System.out.println(huidigeSpeler + " is aan de beurt.");
             int keuze = kiesZetType();
@@ -30,6 +37,46 @@ public class Spel {
                 huidigeSpeler = bord.spring(huidigeSpeler);
             }else{
                 System.out.println("ongeldige keuze, kies opnieuw a.u.b.");
+            }
+            for(int x = 0;x<SPEELVELD_GROOTTE;x++){
+                for(int y = 0;y<SPEELVELD_GROOTTE;y++){
+                    if(bord.getWaarde(x,y) == 'H'){
+                        Hteller++;
+                    }else if(bord.getWaarde(x,y) == 'B'){
+                        Bteller++;
+                    } else if(bord.getWaarde(x,y) == 'x'){
+                        xteller++;
+                    }
+                }
+            }
+
+            System.out.println("score: H = " + Spel.Hteller + " B = " + Spel.Bteller);
+
+            if(Bteller == 0){
+                System.out.println("H heeft gewonnen!");
+                bord.printBord();
+                bord.setSpelVoorbij();
+            }
+
+            if(Hteller == 0){
+                System.out.println("B heeft gewonnen!");
+                bord.printBord();
+                bord.setSpelVoorbij();
+            }
+            if(xteller == 0){
+                if(Bteller>Hteller){
+                    System.out.println("B heeft gewonnen!");
+                    bord.printBord();
+                    bord.setSpelVoorbij();
+                }else if(Hteller>Bteller){
+                    System.out.println("H heeft gewonnen!");
+                    bord.printBord();
+                    bord.setSpelVoorbij();
+                }else if(Bteller == Hteller){
+                    System.out.println("Het is gelijkspel!");
+                    bord.printBord();
+                    bord.setSpelVoorbij();
+                }
             }
         }
     }
