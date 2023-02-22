@@ -1,7 +1,9 @@
 import java.util.Scanner;
+import java.util.Random;
 
 public class Bord {
     private char[][] speelveld;
+    private boolean spelVoorbij;
 
     Bord(int x, int y){
         this.speelveld = new char[x][y];
@@ -25,9 +27,24 @@ public class Bord {
     public static void startSpel() {
         Bord bord = new Bord(7,7);
         bord.zetBeginStand();
-        bord.printBord();
-        bord.dupliceer('H');
-        bord.printBord();
+        char huidigeSpeler = kiesBeginnendeSpeler();
+        while(!bord.spelVoorbij) {
+            bord.printBord();
+            huidigeSpeler = bord.dupliceer(huidigeSpeler);
+            bord.printBord();
+        }
+    }
+
+    private static char kiesBeginnendeSpeler() {
+        Random random = new Random();
+        int willekeurigGetal = random.nextInt(2);
+        if(willekeurigGetal == 0){
+            System.out.println("H mag beginnen");
+            return 'H';
+        }else{
+            System.out.println("B mag beginnen");
+            return 'B';
+        }
     }
 
     public void printBord() {
