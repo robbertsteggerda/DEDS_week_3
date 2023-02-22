@@ -5,7 +5,11 @@ public class Bord {
         this.speelveld = new char[x][y];
     }
 
-    public void setCoordinaatWaarde(int x,int y,char waarde){
+    public char getWaarde(int x, int y){
+        return this.speelveld[x][y];
+    }
+
+    public void setWaarde(int x, int y, char waarde){
         this.speelveld[x][y] = waarde;
     }
 
@@ -15,33 +19,35 @@ public class Bord {
 
     public static void startSpel() {
         Bord bord = new Bord(7,7);
-        for (int x = 0; x < 7; x++) {
-            for (int y = 0; y < 7; y++) {
-                bord.setCoordinaatWaarde(x,y,'x');
-            }
-        }
-
         zetBeginStand(bord);
+
 
         System.out.println("The Great Outdoors Outside");
         for (int x = 0; x < 7; x++) {
+            System.out.print(x + " ");
             for (int y = 0; y < 7; y++) {
                 System.out.print(bord.getSpeelveld()[x][y] + " ");
             }
             System.out.println();
         }
+        System.out.println("  0 1 2 3 4 5 6");
     }
 
     private static void zetBeginStand(Bord bord){
-        bord.setCoordinaatWaarde(6,0,'H');
-        bord.setCoordinaatWaarde(6,1,'H');
-        bord.setCoordinaatWaarde(5,0,'H');
-        bord.setCoordinaatWaarde(5,1,'H');
+        for (int x = 0; x < 7; x++) {
+            for (int y = 0; y < 7; y++) {
+                bord.setWaarde(x,y,'x');
+            }
+        }
+        bord.setWaarde(6,0,'H');
+        bord.setWaarde(6,1,'H');
+        bord.setWaarde(5,0,'H');
+        bord.setWaarde(5,1,'H');
 
-        bord.setCoordinaatWaarde(0,5,'B');
-        bord.setCoordinaatWaarde(0,6,'B');
-        bord.setCoordinaatWaarde(1,5,'B');
-        bord.setCoordinaatWaarde(1,6,'B');
+        bord.setWaarde(0,5,'B');
+        bord.setWaarde(0,6,'B');
+        bord.setWaarde(1,5,'B');
+        bord.setWaarde(1,6,'B');
     }
 }
 
