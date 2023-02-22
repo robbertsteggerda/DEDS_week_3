@@ -1,3 +1,5 @@
+import java.lang.reflect.Array;
+
 public class Stapel<T>{
     private StapelKnoop bovenkant;
     private class StapelKnoop {
@@ -11,16 +13,22 @@ public class Stapel<T>{
         }
     }
 
-    public Stapel<T> duw(T w) {
-        bovenkant = new StapelKnoop(w, bovenkant);
+    public Stapel<T> duw(T waarde) {
+        bovenkant = new StapelKnoop(waarde, bovenkant);
         return this;
     }
-    public T pak() {
-        if (bovenkant.waarde == null){
-            throw new IllegalArgumentException("stapel is leeg");
+    public T pak() throws LegeStapelException {
+        if (bovenkant == null){
+            throw new LegeStapelException();
         }
         T data = bovenkant.waarde;
         bovenkant = bovenkant.volgende;
         return data;
+    }
+}
+
+class LegeStapelException extends Exception {
+    public LegeStapelException(){
+        super("Stapel is leeg");
     }
 }
