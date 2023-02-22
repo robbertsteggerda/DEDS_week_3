@@ -79,6 +79,19 @@ public class Bord {
             }
             }
 
+            public char spring(char huidigeSpeler){
+                Scanner scanner = new Scanner(System.in);
+                System.out.println("voer het y coordinaat van je start in: ");
+                int startY = scanner.nextInt();
+                System.out.println("voer het x coordinaat van je start in: ");
+                int startX = scanner.nextInt();
+                System.out.println("voer het y coordinaat van je doel in: ");
+                int doelY = scanner.nextInt();
+                System.out.println("voer het x coordinaat van je doel in: ");
+                int doelX = scanner.nextInt();
+                return(Spel.wisselSpeler(huidigeSpeler));
+            }
+
     public boolean isAangrenzendAanHuidigeSpeler(int x,int y,char huidigeSpeler){
         if(this.getWaarde(x,y) != 'x' ){
             return false;
@@ -115,5 +128,4 @@ public class Bord {
             this.setWaarde(x-1,y+1,huidigeSpeler);
         }
     }
-
 }
