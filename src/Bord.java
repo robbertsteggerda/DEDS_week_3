@@ -2,16 +2,19 @@ import java.util.Scanner;
 import java.util.Random;
 
 public class Bord {
-    private static final int SPEELVELD_GROOTTE = 7;
-    private char[][] speelveld;
     private boolean spelVoorbij;
+    private char[][] speelveld;
+
+    public boolean isSpelVoorbij(){
+        return this.spelVoorbij;
+    }
 
     Bord(int x, int y){
         this.speelveld = new char[x][y];
     }
 
     public char getWaarde(int x, int y){
-        if(isBuitenSpeelveld(x)||isBuitenSpeelveld(y)){
+        if(Spel.isBuitenSpeelveld(x)||Spel.isBuitenSpeelveld(y)){
             return 'x';
         }
         return this.speelveld[x][y];
@@ -25,31 +28,9 @@ public class Bord {
         return this.speelveld;
     }
 
-    public static void startSpel() {
-        Bord bord = new Bord(SPEELVELD_GROOTTE,SPEELVELD_GROOTTE);
-        bord.zetBeginStand();
-        char huidigeSpeler = kiesBeginnendeSpeler();
-        while(!bord.spelVoorbij) {
-            bord.printBord();
-            huidigeSpeler = bord.dupliceer(huidigeSpeler);
-            bord.printBord();
-        }
-    }
-
-    private static char kiesBeginnendeSpeler() {
-        Random random = new Random();
-        int willekeurigGetal = random.nextInt(2);
-        if(willekeurigGetal == 0){
-            System.out.println("H mag beginnen");
-            return 'H';
-        }else{
-            System.out.println("B mag beginnen");
-            return 'B';
-        }
-    }
 
     public void printBord() {
-        System.out.println("The Great Outdoors Outside");
+        System.out.println("The Great Outdoors Wins");
         for (int x = 0; x < 7; x++) {
             System.out.print(x + " ");
             for (int y = 0; y < 7; y++) {
@@ -60,9 +41,9 @@ public class Bord {
         System.out.println("  0 1 2 3 4 5 6");
     }
 
-    private void zetBeginStand(){
-        for (int x = 0; x < SPEELVELD_GROOTTE; x++) {
-            for (int y = 0; y < SPEELVELD_GROOTTE; y++) {
+    public void zetBeginStand(){
+        for (int x = 0; x < Spel.SPEELVELD_GROOTTE; x++) {
+            for (int y = 0; y < Spel.SPEELVELD_GROOTTE; y++) {
                 this.setWaarde(x,y,'x');
             }
         }
@@ -84,7 +65,7 @@ public class Bord {
             System.out.println("voer het x coordinaat van je doel in: ");
             int doelX = scanner.nextInt();
 
-            if(isBuitenSpeelveld(doelX) || isBuitenSpeelveld(doelY)){
+            if(Spel.isBuitenSpeelveld(doelX) || Spel.isBuitenSpeelveld(doelY)){
                 System.out.println("De gekozen coördinaten liggen buiten het speelveld! Kies opnieuw a.u.b.");
                 return(huidigeSpeler);
             }
@@ -94,13 +75,10 @@ public class Bord {
             } else{
                 this.setWaarde(doelX,doelY,huidigeSpeler);
                 vervangAangrenzendAanTegenstander(doelX,doelY,huidigeSpeler);
-                return(wisselSpeler(huidigeSpeler));
+                return(Spel.wisselSpeler(huidigeSpeler));
             }
             }
 
-        public static boolean isBuitenSpeelveld(int getal){
-            return getal < 0 || getal > 6;
-    }
     public boolean isAangrenzendAanHuidigeSpeler(int x,int y,char huidigeSpeler){
         if(this.getWaarde(x,y) != 'x' ){
             return false;
@@ -111,30 +89,31 @@ public class Bord {
     }
 
     public void vervangAangrenzendAanTegenstander(int x,int y,char huidigeSpeler){
-    char tegenstander = wisselSpeler(huidigeSpeler);
+    char tegenstander = Spel.wisselSpeler(huidigeSpeler);
         if(this.getWaarde(x-1,y) == tegenstander){
             this.setWaarde(x-1,y,huidigeSpeler);
-        }else if(this.getWaarde(x+1,y) == tegenstander){
+        }
+        if(this.getWaarde(x+1,y) == tegenstander){
             this.setWaarde(x+1,y,huidigeSpeler);
-        }else if(this.getWaarde(x,y-1) == tegenstander){
+        }
+        if(this.getWaarde(x,y-1) == tegenstander){
             this.setWaarde(x,y-1,huidigeSpeler);
-        }else if(this.getWaarde(x,y+1) == tegenstander){
+        }
+        if(this.getWaarde(x,y+1) == tegenstander){
             this.setWaarde(x,+1,huidigeSpeler);
-        }else if(this.getWaarde(x+1,y+1) == tegenstander){
+        }
+        if(this.getWaarde(x+1,y+1) == tegenstander){
             this.setWaarde(x+1,y+1,huidigeSpeler);
-        }else if(this.getWaarde(x-1,y-1) == tegenstander){
+        }
+        if(this.getWaarde(x-1,y-1) == tegenstander){
             this.setWaarde(x-1,y-1,huidigeSpeler);
-        }else if(this.getWaarde(x+1,y-1) == tegenstander){
+        }
+        if(this.getWaarde(x+1,y-1) == tegenstander){
             this.setWaarde(x+1,y-1,huidigeSpeler);
-        }else if(this.getWaarde(x-1,y+1) == tegenstander){
+        }
+        if(this.getWaarde(x-1,y+1) == tegenstander){
             this.setWaarde(x-1,y+1,huidigeSpeler);
         }
     }
 
-    public static char wisselSpeler(char huidigeSpeler){
-        if(huidigeSpeler == 'H'){
-            return 'B';
-        }
-        return 'H';
-    }
 }
