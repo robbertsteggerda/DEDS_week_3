@@ -20,8 +20,10 @@ public class Bord {
     public static void startSpel() {
         Bord bord = new Bord(7,7);
         zetBeginStand(bord);
+        printBord(bord);
+    }
 
-
+    private static void printBord(Bord bord) {
         System.out.println("The Great Outdoors Outside");
         for (int x = 0; x < 7; x++) {
             System.out.print(x + " ");
