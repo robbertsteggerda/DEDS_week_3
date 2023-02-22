@@ -19,37 +19,37 @@ public class Bord {
 
     public static void startSpel() {
         Bord bord = new Bord(7,7);
-        zetBeginStand(bord);
-        printBord(bord);
+        bord.zetBeginStand();
+        bord.printBord();
     }
 
-    private static void printBord(Bord bord) {
+    private void printBord() {
         System.out.println("The Great Outdoors Outside");
         for (int x = 0; x < 7; x++) {
             System.out.print(x + " ");
             for (int y = 0; y < 7; y++) {
-                System.out.print(bord.getSpeelveld()[x][y] + " ");
+                System.out.print(this.getSpeelveld()[x][y] + " ");
             }
             System.out.println();
         }
         System.out.println("  0 1 2 3 4 5 6");
     }
 
-    private static void zetBeginStand(Bord bord){
+    private void zetBeginStand(){
         for (int x = 0; x < 7; x++) {
             for (int y = 0; y < 7; y++) {
-                bord.setWaarde(x,y,'x');
+                this.setWaarde(x,y,'x');
             }
         }
-        bord.setWaarde(6,0,'H');
-        bord.setWaarde(6,1,'H');
-        bord.setWaarde(5,0,'H');
-        bord.setWaarde(5,1,'H');
+        this.setWaarde(6,0,'H');
+        this.setWaarde(6,1,'H');
+        this.setWaarde(5,0,'H');
+        this.setWaarde(5,1,'H');
 
-        bord.setWaarde(0,5,'B');
-        bord.setWaarde(0,6,'B');
-        bord.setWaarde(1,5,'B');
-        bord.setWaarde(1,6,'B');
+        this.setWaarde(0,5,'B');
+        this.setWaarde(0,6,'B');
+        this.setWaarde(1,5,'B');
+        this.setWaarde(1,6,'B');
     }
 }
 
