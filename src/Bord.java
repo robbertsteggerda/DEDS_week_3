@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Bord {
     private char[][] speelveld;
 
@@ -6,6 +8,9 @@ public class Bord {
     }
 
     public char getWaarde(int x, int y){
+        if(isBuitenSpeelveld(x)||isBuitenSpeelveld(y)){
+            return 'x';
+        }
         return this.speelveld[x][y];
     }
 
@@ -21,9 +26,11 @@ public class Bord {
         Bord bord = new Bord(7,7);
         bord.zetBeginStand();
         bord.printBord();
+        bord.dupliceer('H');
+        bord.printBord();
     }
 
-    private void printBord() {
+    public void printBord() {
         System.out.println("The Great Outdoors Outside");
         for (int x = 0; x < 7; x++) {
             System.out.print(x + " ");
@@ -51,5 +58,46 @@ public class Bord {
         this.setWaarde(1,5,'B');
         this.setWaarde(1,6,'B');
     }
-}
 
+        public char dupliceer(char huidigeSpeler){
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("voer het y coordinaat van je doel in: ");
+            int doelY = scanner.nextInt();
+            System.out.println("voer het x coordinaat van je doel in: ");
+            int doelX = scanner.nextInt();
+
+            if(isBuitenSpeelveld(doelX) || isBuitenSpeelveld(doelY)){
+                System.out.println("De gekozen coördinaten liggen buiten het speelveld! Kies opnieuw a.u.b.");
+                return(huidigeSpeler);
+            }
+             if (!isAangrenzendAanHuidigeSpeler(doelX,doelY,huidigeSpeler)) {
+                System.out.println("Illegale zet! Kies opnieuw.");
+                return(huidigeSpeler);
+            } else{
+                this.setWaarde(doelX,doelY,huidigeSpeler);
+                return(wisselSpeler(huidigeSpeler));
+            }
+
+            }
+
+        public static boolean isBuitenSpeelveld(int getal){
+            return getal < 0 || getal > 6;
+    }
+    public boolean isAangrenzendAanHuidigeSpeler(int x,int y,char huidigeSpeler){
+        if(this.getWaarde(x,y) == huidigeSpeler ){
+            return false;
+        } else if(this.getWaarde(x-1,y) == huidigeSpeler || this.getWaarde(x+1,y) == huidigeSpeler || this.getWaarde(x,y-1) == huidigeSpeler || this.getWaarde(x,y+1) == huidigeSpeler || this.getWaarde(x-1,y-1) == huidigeSpeler || this.getWaarde(x-1,y+1) == huidigeSpeler || this.getWaarde(x+1,y-1) == huidigeSpeler | this.getWaarde(x+1,y+1) == huidigeSpeler){
+            return true;
+        }else
+        return false;
+    }
+
+    public static char wisselSpeler(char huidigeSpeler){
+        if(huidigeSpeler == 'H'){
+            return 'B';
+        }
+        else{
+            return 'H';
+        }
+    }
+}
