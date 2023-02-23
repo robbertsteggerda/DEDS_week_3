@@ -7,4 +7,5 @@ public class BordTest {
         bord.setWaarde(0,0,'p');
         Assertions.assertEquals('p',bord.getWaarde(0,0));
     }
+
 }

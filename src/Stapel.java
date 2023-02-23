@@ -1,5 +1,3 @@
-import java.lang.reflect.Array;
-
 public class Stapel<T>{
     private StapelKnoop bovenkant;
     private class StapelKnoop {
