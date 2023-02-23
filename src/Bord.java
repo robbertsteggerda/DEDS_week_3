@@ -1,6 +1,7 @@
 import java.sql.SQLOutput;
 import java.util.Scanner;
 import java.util.Random;
+import java.util.ArrayList;
 
 public class Bord {
     private boolean spelVoorbij;
@@ -72,10 +73,10 @@ public class Bord {
                 this.setWaarde(x, y, 'B');
             }
         }
-        this.setWaarde(6, 0, '.');
-        this.setWaarde(6, 1, 'H');
-        this.setWaarde(5, 0, '.');
-        this.setWaarde(5, 1, 'H');
+        this.setWaarde(6, 0, 'H');
+        this.setWaarde(6, 1, '.');
+        this.setWaarde(5, 0, 'H');
+        this.setWaarde(5, 1, '.');
 
         this.setWaarde(0, 5, 'B');
         this.setWaarde(0, 6, 'B');
@@ -136,11 +137,26 @@ public class Bord {
             System.out.println("voer het Y coordinaat van je doel in: ");
             doelX = scanner.nextInt();
         } else{
+            //DIt stuk code zorgt ervoor dat de computer alleen van coordinaten springt waarvan het vakje van hem is
             Random rand = new Random();
-            startY = rand.nextInt(6);
-            startX = rand.nextInt(6);
-            doelY = rand.nextInt(6);
-            doelX = rand.nextInt(6);
+            ArrayList<Coordinaat>  mogelijkeStartCoordinaten = new ArrayList<Coordinaat>();
+            mogelijkeStartCoordinaten.clear();
+            for (int i = 0; i < Spel.SPEELVELD_GROOTTE; i++) {
+                for (int j = 0; j < Spel.SPEELVELD_GROOTTE; j++) {
+                    if (this.getWaarde(i, j) == huidigeSpeler) {
+                        if(isLegaleSprongMogelijk(i,j)){
+                            mogelijkeStartCoordinaten.add(new Coordinaat(i,j));
+                        }
+                    }
+                }
+            }
+
+            int index = (int)(Math.random() * mogelijkeStartCoordinaten.size());
+
+            startY = rand.nextInt(mogelijkeStartCoordinaten.get(index).getY()+1);
+            startX = rand.nextInt(mogelijkeStartCoordinaten.get(index).getX()+1);
+            doelY = rand.nextInt(7);
+            doelX = rand.nextInt(7);
         }
 
         if (Spel.isBuitenSpeelveld(doelX) || Spel.isBuitenSpeelveld(doelY)) {
@@ -225,8 +241,32 @@ public class Bord {
 
     public char willekeurigeRobotZet(char huidigeSpeler) {
         //willekeurige zet:
+
         Random rand = new Random();
         int zetType = rand.nextInt(2);
+        for (int i = 0; i < Spel.SPEELVELD_GROOTTE; i++) {
+            for (int j = 0; j < Spel.SPEELVELD_GROOTTE; j++) {
+                if (this.getWaarde(i,j) == huidigeSpeler) {
+                    if (!this.isLegaleSprongMogelijk(i, j)) {
+                        zetType = 1;
+                    }else{
+                        zetType = rand.nextInt(2);
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < Spel.SPEELVELD_GROOTTE; i++) {
+            for (int j = 0; j < Spel.SPEELVELD_GROOTTE; j++) {
+                if (this.getWaarde(i,j) == huidigeSpeler) {
+                    if (!this.isLegaleDuplicatieMogelijk(i, j)) {
+                        zetType = 0;
+                    }else{
+                        zetType = rand.nextInt(2);
+                    }
+                }
+            }
+        }
         if (zetType == 0) {
             return this.spring(huidigeSpeler);
         }else{
@@ -234,6 +274,34 @@ public class Bord {
         }
     }
 
+    public boolean isAangrenzendAanTegenstander(int x, int y, char huidigeSpeler) {
+        char tegenstander = Spel.wisselSpeler(huidigeSpeler);
+        if (this.getWaarde(x - 1, y) == tegenstander) {
+            return true;
+        }
+        if (this.getWaarde(x + 1, y) == tegenstander) {
+            return true;
+        }
+        if (this.getWaarde(x, y - 1) == tegenstander) {
+            return true;
+        }
+        if (this.getWaarde(x, y + 1) == tegenstander) {
+            return true;
+        }
+        if (this.getWaarde(x + 1, y + 1) == tegenstander) {
+            return true;
+        }
+        if (this.getWaarde(x - 1, y - 1) == tegenstander) {
+            return true;
+        }
+        if (this.getWaarde(x + 1, y - 1) == tegenstander) {
+            return true;
+        }
+        if (this.getWaarde(x - 1, y + 1) == tegenstander) {
+            return true;
+        }
+        return false;
+    }
     public void vervangAangrenzendAanTegenstander(int x, int y, char huidigeSpeler) {
         char tegenstander = Spel.wisselSpeler(huidigeSpeler);
         if (this.getWaarde(x - 1, y) == tegenstander) {

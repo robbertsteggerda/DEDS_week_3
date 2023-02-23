@@ -51,6 +51,7 @@ public class Spel {
                 huidigeSpeler = bord.willekeurigeRobotZet(huidigeSpeler);
             }
 
+            bord.printBord();
             int keuze = kiesZetType();
             if(keuze == 1) {
                 huidigeSpeler = bord.dupliceer(huidigeSpeler);
