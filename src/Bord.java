@@ -65,9 +65,9 @@ public class Bord {
 
         public char dupliceer(char huidigeSpeler){
             Scanner scanner = new Scanner(System.in);
-            System.out.println("voer het y coordinaat van je doel in: ");
+            System.out.println("voer het X coordinaat van je doel in: ");
             int doelY = scanner.nextInt();
-            System.out.println("voer het x coordinaat van je doel in: ");
+            System.out.println("voer het Y coordinaat van je doel in: ");
             int doelX = scanner.nextInt();
 
             if(Spel.isBuitenSpeelveld(doelX) || Spel.isBuitenSpeelveld(doelY)){
@@ -86,13 +86,13 @@ public class Bord {
 
             public char spring(char huidigeSpeler){
                 Scanner scanner = new Scanner(System.in);
-                System.out.println("voer het y coordinaat van je start in: ");
+                System.out.println("voer het X coordinaat van je start in: ");
                 int startY = scanner.nextInt();
-                System.out.println("voer het x coordinaat van je start in: ");
+                System.out.println("voer het Y coordinaat van je start in: ");
                 int startX = scanner.nextInt();
-                System.out.println("voer het y coordinaat van je doel in: ");
+                System.out.println("voer het X coordinaat van je doel in: ");
                 int doelY = scanner.nextInt();
-                System.out.println("voer het x coordinaat van je doel in: ");
+                System.out.println("voer het Y coordinaat van je doel in: ");
                 int doelX = scanner.nextInt();
                 if(Spel.isBuitenSpeelveld(doelX) || Spel.isBuitenSpeelveld(doelY)) {
                     System.out.println("De gekozen coördinaten liggen buiten het speelveld! Kies opnieuw a.u.b.");
@@ -110,11 +110,33 @@ public class Bord {
                         System.out.println("Illegale zet! Het startveld is niet van jou. Kies opnieuw.");
                         return huidigeSpeler;
                     }
+                    if(!isLegaleSprong(startX,startY,doelX,doelY)){
+                        System.out.println("Illegale zet! Je moet 2 vakjes springen. Kies opnieuw");
+                        return huidigeSpeler;
+                    }
                     setWaarde(startX,startY,'x');
                     this.setWaarde(doelX,doelY,huidigeSpeler);
                     vervangAangrenzendAanTegenstander(doelX,doelY,huidigeSpeler);
                 return(Spel.wisselSpeler(huidigeSpeler));
             }
+
+            public boolean isLegaleSprong(int startX,int startY, int doelX, int doelY){
+                //check voor diagonale sprong van één vakje (mag niet)
+                if(Math.abs(startX-doelX) == 1 && Math.abs(startY-doelY) == 1){
+                    return false;
+                }
+                //check voor paardensprong (mag niet)
+                if(Math.abs(startX-doelX) == 1 && Math.abs(startY-doelY) == 2 || Math.abs(startX-doelX) == 2 && Math.abs(startY-doelY) == 1) {
+                    return false;
+                }
+
+                        //check of de X en Y coördinaat beide binnen 2 maar boven 1 van het startvakje liggen
+                        if(Math.abs(startX-doelX) <=2 && Math.abs(startY-doelY) <= 2 && Math.abs(startX-doelX) + Math.abs(startY-doelY) > 1){
+                            return true;
+                        }
+                        return false;
+                    }
+
 
             public boolean isStartVanHuidigeSpeler(int x, int y,char huidigeSpeler){
         if (this.getWaarde(x,y) == huidigeSpeler){
