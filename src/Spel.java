@@ -19,7 +19,7 @@ public class Spel {
         }
     }
 
-    public static void startSpel() {
+    public static void startSpel() throws LegeStapelException {
         Bord bord = new Bord(SPEELVELD_GROOTTE,SPEELVELD_GROOTTE);
         bord.zetBeginStand();
         char huidigeSpeler = kiesBeginnendeSpeler();
@@ -35,7 +35,9 @@ public class Spel {
                 huidigeSpeler = bord.dupliceer(huidigeSpeler);
             }else if(keuze == 2){
                 huidigeSpeler = bord.spring(huidigeSpeler);
-            }else{
+            }else if(keuze == 3){
+                    bord.zetBordTerug();
+                } else{
                 System.out.println("ongeldige keuze, kies opnieuw a.u.b.");
             }
             for(int x = 0;x<SPEELVELD_GROOTTE;x++){
@@ -86,6 +88,7 @@ public class Spel {
         System.out.println("Kies het type zet dat je wilt doen: ");
         System.out.println("1. dupliceer");
         System.out.println("2. sprong");
+        System.out.println("3. zet terugnemen");
         int keuze = scanner.nextInt();
         return keuze;
     }

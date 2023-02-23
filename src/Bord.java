@@ -5,6 +5,7 @@ import java.util.Random;
 public class Bord {
     private boolean spelVoorbij;
     private char[][] speelveld;
+    private static Stapel stapel = new Stapel();
 
     public void setSpelVoorbij(){
         this.spelVoorbij = true;
@@ -31,6 +32,25 @@ public class Bord {
 
     public char[][] getSpeelveld(){
         return this.speelveld;
+    }
+
+    public void slaBordOp(){
+        char[][]kopie = new char[Spel.SPEELVELD_GROOTTE][Spel.SPEELVELD_GROOTTE];
+        for (int i = 0; i < Spel.SPEELVELD_GROOTTE; i++) {
+            for (int j = 0; j < Spel.SPEELVELD_GROOTTE; j++) {
+                kopie[i][j] = this.getSpeelveld()[i][j];
+            }
+        }
+        stapel.duw(kopie);
+    }
+
+    public void zetBordTerug() throws LegeStapelException {
+            char[][]kopie = (char[][]) stapel.pak();
+        for (int i = 0; i < kopie.length; i++) {
+            for (int j = 0; j < kopie.length; j++) {
+                this.getSpeelveld()[i][j] = kopie[i][j];
+            }
+        }
     }
 
 
@@ -64,6 +84,7 @@ public class Bord {
     }
 
         public char dupliceer(char huidigeSpeler){
+            slaBordOp();
             Scanner scanner = new Scanner(System.in);
             System.out.println("voer het X coordinaat van je doel in: ");
             int doelY = scanner.nextInt();
@@ -85,6 +106,7 @@ public class Bord {
             }
 
             public char spring(char huidigeSpeler){
+                slaBordOp();
                 Scanner scanner = new Scanner(System.in);
                 System.out.println("voer het X coordinaat van je start in: ");
                 int startY = scanner.nextInt();
