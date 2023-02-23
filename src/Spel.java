@@ -7,6 +7,7 @@ public class Spel {
     public static int Hteller;
     private static int xteller;
 
+    //deze methode kiest een willekeurige speler voor een multiplayer optie
     private static char kiesBeginnendeSpeler() {
         Random random = new Random();
         int willekeurigGetal = random.nextInt(2);
@@ -22,7 +23,9 @@ public class Spel {
     public static void startSpel() throws LegeStapelException {
         Bord bord = new Bord(SPEELVELD_GROOTTE,SPEELVELD_GROOTTE);
         bord.zetBeginStand();
-        char huidigeSpeler = kiesBeginnendeSpeler();
+
+       char huidigeSpeler = kiesBeginnendeSpeler();
+
         while(!bord.isSpelVoorbij()) {
             Bteller = 0;
             Hteller = 0;
@@ -30,6 +33,12 @@ public class Spel {
 
             bord.printBord();
             System.out.println(huidigeSpeler + " is aan de beurt.");
+            while(huidigeSpeler == 'B'){
+                huidigeSpeler = bord.robotZet(huidigeSpeler);
+            }
+
+            bord.printBord();
+
             int keuze = kiesZetType();
             if(keuze == 1) {
                 huidigeSpeler = bord.dupliceer(huidigeSpeler);
