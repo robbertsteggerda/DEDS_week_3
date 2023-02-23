@@ -21,7 +21,7 @@ public class Bord {
 
     public char getWaarde(int x, int y) {
         if (Spel.isBuitenSpeelveld(x) || Spel.isBuitenSpeelveld(y)) {
-            return 'x';
+            return '.';
         }
         return this.speelveld[x][y];
     }
@@ -69,7 +69,7 @@ public class Bord {
     public void zetBeginStand() {
         for (int x = 0; x < Spel.SPEELVELD_GROOTTE; x++) {
             for (int y = 0; y < Spel.SPEELVELD_GROOTTE; y++) {
-                this.setWaarde(x, y, 'x');
+                this.setWaarde(x, y, '.');
             }
         }
         this.setWaarde(6, 0, 'H');
@@ -173,10 +173,13 @@ public class Bord {
             }
             return huidigeSpeler;
         }
-        setWaarde(startX, startY, 'x');
-        this.setWaarde(doelX, doelY, huidigeSpeler);
-        vervangAangrenzendAanTegenstander(doelX, doelY, huidigeSpeler);
-        return (Spel.wisselSpeler(huidigeSpeler));
+       // if(!Spel.isBuitenSpeelveld(startX) && !Spel.isBuitenSpeelveld(startY) && !Spel.isBuitenSpeelveld(doelX) && !Spel.isBuitenSpeelveld(doelY)) {
+            setWaarde(startX, startY, '.');
+            this.setWaarde(doelX, doelY, huidigeSpeler);
+            vervangAangrenzendAanTegenstander(doelX, doelY, huidigeSpeler);
+            return (Spel.wisselSpeler(huidigeSpeler));
+       // }
+      //  return 'B';
     }
 
     public boolean isLegaleSprong(int startX, int startY, int doelX, int doelY) {
@@ -201,12 +204,11 @@ public class Bord {
         if (this.getWaarde(x, y) == huidigeSpeler) {
             return true;
         }
-        System.out.println(this.getWaarde(x, y));
         return false;
     }
 
     public boolean isVeldVrij(int x, int y) {
-        if (this.getWaarde(x, y) == 'x') {
+        if (this.getWaarde(x, y) == '.') {
             return true;
         }
         return false;
@@ -221,7 +223,7 @@ public class Bord {
             return false;
     }
 
-    public char robotZet(char huidigeSpeler) {
+    public char willekeurigeRobotZet(char huidigeSpeler) {
         //willekeurige zet:
         Random rand = new Random();
         int zetType = rand.nextInt(2);

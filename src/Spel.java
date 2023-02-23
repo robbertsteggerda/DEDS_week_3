@@ -5,7 +5,7 @@ public class Spel {
     public static final int SPEELVELD_GROOTTE = 7;
     public static int Bteller;
     public static int Hteller;
-    private static int xteller;
+    private static int puntTeller;
 
     //deze methode kiest een willekeurige speler voor een multiplayer optie
     private static char kiesBeginnendeSpeler() {
@@ -29,12 +29,12 @@ public class Spel {
         while(!bord.isSpelVoorbij()) {
             Bteller = 0;
             Hteller = 0;
-            xteller = 0;
+            puntTeller = 0;
 
             bord.printBord();
             System.out.println(huidigeSpeler + " is aan de beurt.");
             while(huidigeSpeler == 'B'){
-                huidigeSpeler = bord.robotZet(huidigeSpeler);
+                huidigeSpeler = bord.willekeurigeRobotZet(huidigeSpeler);
             }
 
             bord.printBord();
@@ -55,8 +55,8 @@ public class Spel {
                         Hteller++;
                     }else if(bord.getWaarde(x,y) == 'B'){
                         Bteller++;
-                    } else if(bord.getWaarde(x,y) == 'x'){
-                        xteller++;
+                    } else if(bord.getWaarde(x,y) == '.'){
+                        puntTeller++;
                     }
                 }
             }
@@ -74,7 +74,7 @@ public class Spel {
                 bord.printBord();
                 bord.setSpelVoorbij();
             }
-            if(xteller == 0){
+            if(puntTeller == 0){
                 if(Bteller>Hteller){
                     System.out.println("B heeft gewonnen!");
                     bord.printBord();
