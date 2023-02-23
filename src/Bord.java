@@ -69,12 +69,12 @@ public class Bord {
     public void zetBeginStand() {
         for (int x = 0; x < Spel.SPEELVELD_GROOTTE; x++) {
             for (int y = 0; y < Spel.SPEELVELD_GROOTTE; y++) {
-                this.setWaarde(x, y, '.');
+                this.setWaarde(x, y, 'B');
             }
         }
-        this.setWaarde(6, 0, 'H');
+        this.setWaarde(6, 0, '.');
         this.setWaarde(6, 1, 'H');
-        this.setWaarde(5, 0, 'H');
+        this.setWaarde(5, 0, '.');
         this.setWaarde(5, 1, 'H');
 
         this.setWaarde(0, 5, 'B');
@@ -259,6 +259,71 @@ public class Bord {
         }
         if (this.getWaarde(x - 1, y + 1) == tegenstander) {
             this.setWaarde(x - 1, y + 1, huidigeSpeler);
+        }
+    }
+
+    public boolean heeftLegaleZet(char huidigeSpeler) {
+        for (int i = 0; i < Spel.SPEELVELD_GROOTTE; i++) {
+            for (int j = 0; j < Spel.SPEELVELD_GROOTTE; j++) {
+                if (this.getWaarde(i,j) == huidigeSpeler) {
+                    if (!this.isLegaleSprongMogelijk(i, j) && !this.isLegaleDuplicatieMogelijk(i, j)) {
+                        System.out.println("Geen legale zetten mogelijk! Andere speler is aan de beurt.");
+                        return false;
+                    }else{
+                        return true;
+                    }
+                }
+            }
+        }
+        if(huidigeSpeler == 'H'){
+            Spel.HHeeftZetten = true;
+        } else{
+            Spel.BHeeftZetten = true;
+        }
+        return true;
+    }
+
+    private boolean isLegaleDuplicatieMogelijk(int x, int y) {
+        if (this.getWaarde(x+1,y+1) == '.') {
+            return true;
+        } else if (this.getWaarde(x+1,y-1) == '.') {
+            return true;
+        } else if (this.getWaarde(x-1,y+1) == '.') {
+            return true;
+        } else if (this.getWaarde(x-1,y-1) == '.') {
+            return true;
+        } else if (this.getWaarde(x+1,y) == '.') {
+            return true;
+        } else if (this.getWaarde(x,y+1) == '.') {
+            return true;
+        } else if (this.getWaarde(x-1,y) == '.') {
+            return true;
+        } else if (this.getWaarde(x,y-1)== '.') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean isLegaleSprongMogelijk(int x, int y) {
+        if (this.getWaarde(x+2,y+2) == '.') {
+            return true;
+        } else if (this.getWaarde(x+2,y-2) == '.') {
+            return true;
+        } else if (this.getWaarde(x-2,y+2) == '.') {
+            return true;
+        } else if (this.getWaarde(x-2,y-2) == '.') {
+            return true;
+        } else if (this.getWaarde(x+2,y) == '.') {
+            return true;
+        } else if (this.getWaarde(x,y+2) == '.') {
+            return true;
+        } else if (this.getWaarde(x-2,y) == '.') {
+            return true;
+        } else if (this.getWaarde(x,y-2) == '.') {
+            return true;
+        } else {
+            return false;
         }
     }
 }

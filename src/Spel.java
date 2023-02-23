@@ -6,8 +6,10 @@ public class Spel {
     public static int Bteller;
     public static int Hteller;
     private static int puntTeller;
+    public static boolean HHeeftZetten = true;
+    public static boolean BHeeftZetten = true;
 
-    //deze methode kiest een willekeurige speler voor een multiplayer optie
+    //deze methode kiest een willekeurige speler
     private static char kiesBeginnendeSpeler() {
         Random random = new Random();
         int willekeurigGetal = random.nextInt(2);
@@ -20,13 +22,25 @@ public class Spel {
         }
     }
 
+
     public static void startSpel() throws LegeStapelException {
         Bord bord = new Bord(SPEELVELD_GROOTTE,SPEELVELD_GROOTTE);
         bord.zetBeginStand();
+        bord.printBord();
 
        char huidigeSpeler = kiesBeginnendeSpeler();
 
         while(!bord.isSpelVoorbij()) {
+            while(!bord.heeftLegaleZet(huidigeSpeler) && (HHeeftZetten || BHeeftZetten)){
+                if(huidigeSpeler == 'H'){
+                    huidigeSpeler = wisselSpeler(huidigeSpeler);
+                    HHeeftZetten = false;
+                } else{
+                    BHeeftZetten = false;
+                    huidigeSpeler = wisselSpeler(huidigeSpeler);
+                }
+                //wisselSpeler(huidigeSpeler);
+            }
             Bteller = 0;
             Hteller = 0;
             puntTeller = 0;
@@ -36,8 +50,6 @@ public class Spel {
             while(huidigeSpeler == 'B'){
                 huidigeSpeler = bord.willekeurigeRobotZet(huidigeSpeler);
             }
-
-            bord.printBord();
 
             int keuze = kiesZetType();
             if(keuze == 1) {
