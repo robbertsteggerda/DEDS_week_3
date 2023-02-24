@@ -62,7 +62,6 @@ public class Bord {
         }
     }
 
-
     public void printBord() {
         System.out.println("The Great Outdoors Wins");
         for (int x = 0; x < 7; x++) {
@@ -86,6 +85,22 @@ public class Bord {
         this.setWaarde(5, 0, 'H');
         this.setWaarde(5, 1, 'H');
 
+        //deze op true zetten om te bewijzen dat legale zetten checken werkt
+        boolean testLegaleZettenCheck = false;
+        if(testLegaleZettenCheck) {
+            this.setWaarde(4, 0, 'B');
+            this.setWaarde(4, 1, 'B');
+            this.setWaarde(5, 2, 'B');
+            this.setWaarde(6, 2, 'B');
+            this.setWaarde(4, 2, 'B');
+            this.setWaarde(3, 0, 'B');
+            this.setWaarde(3, 1, 'B');
+            this.setWaarde(3, 2, 'B');
+            this.setWaarde(3, 3, 'B');
+            this.setWaarde(4, 3, 'B');
+            this.setWaarde(5, 3, 'B');
+            this.setWaarde(6, 3, 'B');
+        }
         this.setWaarde(0, 5, 'B');
         this.setWaarde(0, 6, 'B');
         this.setWaarde(1, 5, 'B');
@@ -379,11 +394,11 @@ public class Bord {
         int zetType = rand.nextInt(1);
         for (int i = 0; i < Spel.SPEELVELD_GROOTTE; i++) {
             for (int j = 0; j < Spel.SPEELVELD_GROOTTE; j++) {
-                if (this.getWaarde(i,j) == huidigeSpeler) {
+                if (this.getWaarde(i, j) == huidigeSpeler) {
                     //indien aantal zetten kleiner is dan vijf: doe een duplicatie als dit mogelijk is
                     if (!this.isLegaleSprongMogelijk(i, j) || this.getAantalZetten() < 5) {
                         zetType = 1;
-                    }else{
+                    } else {
                         zetType = rand.nextInt(2);
                     }
                 }
@@ -392,22 +407,35 @@ public class Bord {
 
         for (int i = 0; i < Spel.SPEELVELD_GROOTTE; i++) {
             for (int j = 0; j < Spel.SPEELVELD_GROOTTE; j++) {
-                if (this.getWaarde(i,j) == huidigeSpeler) {
+                if (this.getWaarde(i, j) == huidigeSpeler) {
                     if (!this.isLegaleDuplicatieMogelijk(i, j)) {
                         zetType = 0;
-                    }else{
+                    } else {
                         zetType = rand.nextInt(2);
                     }
                 }
             }
         }
+
+        for (int i = 0; i < Spel.SPEELVELD_GROOTTE; i++) {
+            for (int j = 0; j < Spel.SPEELVELD_GROOTTE; j++) {
+                if (this.getWaarde(i, j) == 'B') {
+                    if (!this.isLegaleSprongMogelijk(i, j) && !this.isLegaleDuplicatieMogelijk(i, j)) {
+                        System.out.println("Geen legale zetten mogelijk! Andere speler is aan de beurt.");
+                        this.setSpelVoorbij();
+                        return 'x';
+                    }
+                }
+            }
+        }
+
+
         if (zetType == 0) {
             return this.spring(huidigeSpeler);
-        }else{
+        } else {
             return this.dupliceer(huidigeSpeler);
         }
     }
-
     public boolean isAangrenzendAanTegenstander(int x, int y, char huidigeSpeler) {
         char tegenstander = Spel.wisselSpeler(huidigeSpeler);
         if (this.getWaarde(x - 1, y) == tegenstander) {
@@ -486,21 +514,21 @@ public class Bord {
     }
 
     private boolean isLegaleDuplicatieMogelijk(int x, int y) {
-        if (this.getWaarde(x+1,y+1) == '.') {
+        if (this.getWaarde(x+1,y+1) == '.' && !Spel.isBuitenSpeelveld(x+1) && !Spel.isBuitenSpeelveld(y+1)) {
             return true;
-        } else if (this.getWaarde(x+1,y-1) == '.') {
+        } else if (this.getWaarde(x+1,y-1) == '.' && !Spel.isBuitenSpeelveld(x+1) && !Spel.isBuitenSpeelveld(y-1)) {
             return true;
-        } else if (this.getWaarde(x-1,y+1) == '.') {
+        } else if (this.getWaarde(x-1,y+1) == '.' && !Spel.isBuitenSpeelveld(x-1) && !Spel.isBuitenSpeelveld(y+1)) {
             return true;
-        } else if (this.getWaarde(x-1,y-1) == '.') {
+        } else if (this.getWaarde(x-1,y-1) == '.' && !Spel.isBuitenSpeelveld(x-1) && !Spel.isBuitenSpeelveld(y-1)) {
             return true;
-        } else if (this.getWaarde(x+1,y) == '.') {
+        } else if (this.getWaarde(x+1,y) == '.' && !Spel.isBuitenSpeelveld(x+1) && !Spel.isBuitenSpeelveld(y)) {
             return true;
-        } else if (this.getWaarde(x,y+1) == '.') {
+        } else if (this.getWaarde(x,y+1) == '.' && !Spel.isBuitenSpeelveld(x) && !Spel.isBuitenSpeelveld(y+1)) {
             return true;
-        } else if (this.getWaarde(x-1,y) == '.') {
+        } else if (this.getWaarde(x-1,y) == '.' && !Spel.isBuitenSpeelveld(x-1) && !Spel.isBuitenSpeelveld(y)) {
             return true;
-        } else if (this.getWaarde(x,y-1)== '.') {
+        } else if (this.getWaarde(x,y-1)== '.' && !Spel.isBuitenSpeelveld(x) && !Spel.isBuitenSpeelveld(y-1)) {
             return true;
         } else {
             return false;
@@ -508,21 +536,21 @@ public class Bord {
     }
 
     private boolean isLegaleSprongMogelijk(int x, int y) {
-        if (this.getWaarde(x+2,y+2) == '.') {
+        if (this.getWaarde(x+2,y+2) == '.' && !Spel.isBuitenSpeelveld(x+2) && !Spel.isBuitenSpeelveld(y+2)) {
             return true;
-        } else if (this.getWaarde(x+2,y-2) == '.') {
+        } else if (this.getWaarde(x+2,y-2) == '.' && !Spel.isBuitenSpeelveld(x+2) && !Spel.isBuitenSpeelveld(y-2)) {
             return true;
-        } else if (this.getWaarde(x-2,y+2) == '.') {
+        } else if (this.getWaarde(x-2,y+2) == '.' && !Spel.isBuitenSpeelveld(x-2) && !Spel.isBuitenSpeelveld(y+2)) {
             return true;
-        } else if (this.getWaarde(x-2,y-2) == '.') {
+        } else if (this.getWaarde(x-2,y-2) == '.' && !Spel.isBuitenSpeelveld(x-2) && !Spel.isBuitenSpeelveld(y-2)) {
             return true;
-        } else if (this.getWaarde(x+2,y) == '.') {
+        } else if (this.getWaarde(x+2,y) == '.' && !Spel.isBuitenSpeelveld(x+2) && !Spel.isBuitenSpeelveld(y)) {
             return true;
-        } else if (this.getWaarde(x,y+2) == '.') {
+        } else if (this.getWaarde(x,y+2) == '.' && !Spel.isBuitenSpeelveld(x) && !Spel.isBuitenSpeelveld(y+2)) {
             return true;
-        } else if (this.getWaarde(x-2,y) == '.') {
+        } else if (this.getWaarde(x-2,y) == '.' && !Spel.isBuitenSpeelveld(x-2) && !Spel.isBuitenSpeelveld(y)) {
             return true;
-        } else if (this.getWaarde(x,y-2) == '.') {
+        } else if (this.getWaarde(x,y-2) == '.' && !Spel.isBuitenSpeelveld(x) && !Spel.isBuitenSpeelveld(y-2)) {
             return true;
         } else {
             return false;

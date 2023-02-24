@@ -28,7 +28,6 @@ public class Spel {
         Bord bord = new Bord(SPEELVELD_GROOTTE,SPEELVELD_GROOTTE);
         bord.zetBeginStand();
         bord.printBord();
-
        char huidigeSpeler = kiesBeginnendeSpeler();
 
         while(!bord.isSpelVoorbij()) {
@@ -42,6 +41,10 @@ public class Spel {
                 }
                 //wisselSpeler(huidigeSpeler);
             }
+
+            if(huidigeSpeler == 'x'){
+                break;
+            }
             Bteller = 0;
             Hteller = 0;
             puntTeller = 0;
@@ -49,11 +52,28 @@ public class Spel {
             bord.printBord();
             System.out.println(huidigeSpeler + " is aan de beurt.");
             while(huidigeSpeler == 'B'){
+                boolean eindigHetSpel = !bord.heeftLegaleZet(huidigeSpeler);
+                if(eindigHetSpel){
+                    bord.setSpelVoorbij();
+                    break;
+                }
                 huidigeSpeler = bord.robotZet(huidigeSpeler);
+            }
+            boolean eindigHetSpel2 = !bord.heeftLegaleZet(huidigeSpeler);
+            if(eindigHetSpel2){
+                break;
             }
 
             System.out.println("Aantal zetten " + bord.getAantalZetten());
             bord.printBord();
+            boolean eindigHetSpel = false;
+            if(!bord.heeftLegaleZet(huidigeSpeler)) {
+            //    boolean eindigHetSpel = !bord.heeftLegaleZet(huidigeSpeler);
+                eindigHetSpel = true;
+            }
+            if(eindigHetSpel){
+                bord.setSpelVoorbij();
+            }
             int keuze = kiesZetType();
             if(keuze == 1) {
                 huidigeSpeler = bord.dupliceer(huidigeSpeler);
@@ -95,19 +115,7 @@ public class Spel {
                 bord.setSpelVoorbij();
             }
             if(puntTeller == 0){
-                if(Bteller>Hteller){
-                    System.out.println("B heeft gewonnen!");
-                    bord.printBord();
-                    bord.setSpelVoorbij();
-                }else if(Hteller>Bteller){
-                    System.out.println("H heeft gewonnen!");
-                    bord.printBord();
-                    bord.setSpelVoorbij();
-                }else if(Bteller == Hteller){
-                    System.out.println("Het is gelijkspel!");
-                    bord.printBord();
-                    bord.setSpelVoorbij();
-                }
+                printWinnaar(bord);
             }
             if(!isZetTeruggezet) {
                 int aantalZetten = bord.getAantalZetten();
@@ -116,6 +124,33 @@ public class Spel {
             }else{
                 isZetTeruggezet = false;
             }
+        }
+        printWinnaar(bord);
+    }
+
+    private static void printWinnaar(Bord bord) {
+        for (int x = 0; x < SPEELVELD_GROOTTE; x++) {
+            for (int y = 0; y < SPEELVELD_GROOTTE; y++) {
+                if (bord.getWaarde(x, y) == 'H') {
+                    Hteller++;
+                } else if (bord.getWaarde(x, y) == 'B') {
+                    Bteller++;
+                }
+            }
+        }
+
+        if(Bteller>Hteller){
+            System.out.println("B heeft gewonnen!");
+            bord.printBord();
+            bord.setSpelVoorbij();
+        }else if(Hteller>Bteller){
+            System.out.println("H heeft gewonnen!");
+            bord.printBord();
+            bord.setSpelVoorbij();
+        }else if(Bteller == Hteller){
+            System.out.println("Het is gelijkspel!");
+            bord.printBord();
+            bord.setSpelVoorbij();
         }
     }
 
