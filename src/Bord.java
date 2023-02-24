@@ -202,12 +202,13 @@ public class Bord {
                 if(this.isAangrenzendAanTegenstander(mogelijkeDoelenLijst.get(j).getX(),mogelijkeStartCoordinaten.get(j).getY(),huidigeSpeler)){
                     doelenLijst.add(mogelijkeStartCoordinaten.get(j));
                 }
-                for (int i = 0; i < doelenLijst.get(j).getDoelen().size(); i++) {
-                    doelenLijst = mogelijkeStartCoordinaten.get(index).getDoelen();
+                for (int i = 0; i < mogelijkeStartCoordinaten.get(j).getDoelen().size(); i++) {
+                    doelenLijst.addAll(mogelijkeStartCoordinaten.get(index).getDoelen());
                     if (this.isAangrenzendAanTegenstander(doelenLijst.get(i).getX(), doelenLijst.get(i).getY(), huidigeSpeler)) {
                         doelX = doelenLijst.get(i).getX();
                         doelY = doelenLijst.get(i).getY();
-                }
+                    }
+
             }
             }
 
