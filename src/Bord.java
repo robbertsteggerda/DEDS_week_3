@@ -91,17 +91,60 @@ public class Bord {
         if (huidigeSpeler == 'H') {
             slaBordOp();
 
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("voer het X coordinaat van je doel in: ");
-        doelY = scanner.nextInt();
-        System.out.println("voer het Y coordinaat van je doel in: ");
-        doelX = scanner.nextInt();
-        //willekeurige zet van de computer
-        }else{
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("voer het X coordinaat van je doel in: ");
+            doelY = scanner.nextInt();
+            System.out.println("voer het Y coordinaat van je doel in: ");
+            doelX = scanner.nextInt();
+            //willekeurige zet van de computer
+        } else {
+            //Dit stuk code zorgt ervoor dat de computer alleen van coordinaten springt waarvan het vakje van hem is
             Random rand = new Random();
-            doelY = rand.nextInt(6);
-            doelX = rand.nextInt(6);
+            ArrayList<Coordinaat>  mogelijkeStartCoordinaten = new ArrayList<Coordinaat>();
+            mogelijkeStartCoordinaten.clear();
+            for (int i = 0; i < Spel.SPEELVELD_GROOTTE; i++) {
+                for (int j = 0; j < Spel.SPEELVELD_GROOTTE; j++) {
+                    if (this.getWaarde(i, j) == huidigeSpeler) {
+                        if(isLegaleDuplicatieMogelijk(i,j)){
+                            mogelijkeStartCoordinaten.add(new Coordinaat(i,j, (ArrayList<Coordinaat>) (vindLegaleDuplicaties(i,j)).clone()));
+                        }
+                    }
+                }
+            }
+
+            //de computer kiest willekeurig één van de mogelijke startvakjes
+            //vanaf één van deze vakjes probeert hij naast de tegenstander te gaan staan
+            //als dit kan, doet hij een zet waarbij hij naast een tegenstander gaat staan
+            //als dit niet kan, doet hij een willekeurige sprong
+            //helaas werkt dit niet helemaal
+            int index = (int)(Math.random() * mogelijkeStartCoordinaten.size());
+            int doelIndex = (int) (Math.random()*mogelijkeStartCoordinaten.get(index).getDoelen().size());
+
+            ArrayList<Coordinaat> mogelijkeDoelenLijst = new ArrayList<Coordinaat>();
+            ArrayList<Coordinaat> doelenLijst = new ArrayList<Coordinaat>();
+            for (int j = 0; j < mogelijkeStartCoordinaten.size(); j++) {
+                mogelijkeDoelenLijst.addAll(this.vindLegaleDuplicaties(mogelijkeStartCoordinaten.get(j).getX(),mogelijkeStartCoordinaten.get(j).getY()));
+                if(this.isAangrenzendAanTegenstander(mogelijkeDoelenLijst.get(j).getX(),mogelijkeStartCoordinaten.get(j).getY(),huidigeSpeler)){
+                    doelenLijst.add(mogelijkeDoelenLijst.get(j));
+                }
+                for (int i = 0; i < mogelijkeStartCoordinaten.get(j).getDoelen().size(); i++) {
+                    doelenLijst.addAll(mogelijkeStartCoordinaten.get(j).getDoelen());
+                    if (this.isAangrenzendAanTegenstander(doelenLijst.get(i).getX(), doelenLijst.get(i).getY(), huidigeSpeler)) {
+                        doelX = doelenLijst.get(i).getX();
+                        doelY = doelenLijst.get(i).getY();
+                    }
+
+                }
+            }
+
+            if(doelY == -1) {
+                doelY = rand.nextInt(6);
+            }
+            if(doelX == -1) {
+                doelX = rand.nextInt(6);
+            }
         }
+
 
         if (Spel.isBuitenSpeelveld(doelX) || Spel.isBuitenSpeelveld(doelY)) {
             System.out.println("De gekozen coördinaten liggen buiten het speelveld! Kies opnieuw a.u.b.");
@@ -122,8 +165,8 @@ public class Bord {
     public char spring(char huidigeSpeler) {
         int startY = 0;
         int startX = 0;
-        int doelY = 0;
-        int doelX = 0;
+        int doelX = -1;
+        int doelY = -1;
         //sla alleen het bord op als de huidige speler niet de computer is
         if (huidigeSpeler == 'H') {
             slaBordOp();
@@ -151,13 +194,39 @@ public class Bord {
                 }
             }
 
+            //de computer kiest willekeurig één van de mogelijke startvakjes
+            //vanaf één van deze vakjes probeert hij naast de tegenstander te gaan staan
+            //als dit kan, doet hij een zet waarbij hij naast een tegenstander gaat staan
+            //als dit niet kan, doet hij een willekeurige sprong
+            //helaas werkt dit niet helemaal
             int index = (int)(Math.random() * mogelijkeStartCoordinaten.size());
             int doelIndex = (int) (Math.random()*mogelijkeStartCoordinaten.get(index).getDoelen().size());
 
+            ArrayList<Coordinaat> mogelijkeDoelenLijst = new ArrayList<Coordinaat>();
+            ArrayList<Coordinaat> doelenLijst = new ArrayList<Coordinaat>();
+            for (int j = 0; j < mogelijkeStartCoordinaten.size(); j++) {
+                mogelijkeDoelenLijst.addAll(this.vindLegaleSprongen(mogelijkeStartCoordinaten.get(j).getX(),mogelijkeStartCoordinaten.get(j).getY()));
+                if(this.isAangrenzendAanTegenstander(mogelijkeDoelenLijst.get(j).getX(),mogelijkeStartCoordinaten.get(j).getY(),huidigeSpeler)){
+                    doelenLijst.add(mogelijkeDoelenLijst.get(j));
+                }
+                for (int i = 0; i < mogelijkeStartCoordinaten.get(j).getDoelen().size(); i++) {
+                    doelenLijst.addAll(mogelijkeStartCoordinaten.get(j).getDoelen());
+                    if (this.isAangrenzendAanTegenstander(doelenLijst.get(i).getX(), doelenLijst.get(i).getY(), huidigeSpeler)) {
+                        doelX = doelenLijst.get(i).getX();
+                        doelY = doelenLijst.get(i).getY();
+                    }
+
+            }
+            }
+
             startY = rand.nextInt(mogelijkeStartCoordinaten.get(index).getY()+1);
             startX = rand.nextInt(mogelijkeStartCoordinaten.get(index).getX()+1);
-            doelY = rand.nextInt(mogelijkeStartCoordinaten.get(index).getDoelen().get(doelIndex).getY());
-            doelX = rand.nextInt(mogelijkeStartCoordinaten.get(index).getDoelen().get(doelIndex).getX());
+            if(doelY == -1) {
+                doelY = rand.nextInt(6);
+            }
+            if(doelX == -1) {
+                doelX = rand.nextInt(6);
+            }
         }
 
         if (Spel.isBuitenSpeelveld(doelX) || Spel.isBuitenSpeelveld(doelY)) {
@@ -203,19 +272,19 @@ public class Bord {
         ArrayList<Coordinaat> lijst = new ArrayList<Coordinaat>();
         if(this.getWaarde(x+2,y) == '.' && x+2 >= 0 && x+2 < Spel.SPEELVELD_GROOTTE){
             lijst.add(new Coordinaat(x+2,y));
-        }else if(this.getWaarde(x-2,y) == '.' && x-2 >= 0 && x-2 < Spel.SPEELVELD_GROOTTE){
+        } if(this.getWaarde(x-2,y) == '.' && x-2 >= 0 && x-2 < Spel.SPEELVELD_GROOTTE){
             lijst.add(new Coordinaat(x-2,y));
-        }else if(this.getWaarde(x+2,y+2) == '.' && x+2 >= 0 && x+2 < Spel.SPEELVELD_GROOTTE && y+2 >= 0 && y+2 < Spel.SPEELVELD_GROOTTE){
+        } if(this.getWaarde(x+2,y+2) == '.' && x+2 >= 0 && x+2 < Spel.SPEELVELD_GROOTTE && y+2 >= 0 && y+2 < Spel.SPEELVELD_GROOTTE){
             lijst.add(new Coordinaat(x+2,y+2));
-        }else if(this.getWaarde(x+2,y-2) == '.' && x+2 >= 0 && x+2 < Spel.SPEELVELD_GROOTTE && y-2 >= 0 && y-2 < Spel.SPEELVELD_GROOTTE){
+        } if(this.getWaarde(x+2,y-2) == '.' && x+2 >= 0 && x+2 < Spel.SPEELVELD_GROOTTE && y-2 >= 0 && y-2 < Spel.SPEELVELD_GROOTTE){
             lijst.add(new Coordinaat(x+2,y-2));
-        }else if(this.getWaarde(x,y+2) == '.' && y+2 >= 0 && y+2 < Spel.SPEELVELD_GROOTTE){
+        } if(this.getWaarde(x,y+2) == '.' && y+2 >= 0 && y+2 < Spel.SPEELVELD_GROOTTE){
             lijst.add(new Coordinaat(x,y+2));
-        }else if(this.getWaarde(x-2,y-2) == '.' && y-2 >= 0 && y-2 < Spel.SPEELVELD_GROOTTE && x-2 >= 0 && x-2 < Spel.SPEELVELD_GROOTTE){
+        } if(this.getWaarde(x-2,y-2) == '.' && y-2 >= 0 && y-2 < Spel.SPEELVELD_GROOTTE && x-2 >= 0 && x-2 < Spel.SPEELVELD_GROOTTE){
             lijst.add(new Coordinaat(x-2,y-2));
-        }else if(this.getWaarde(x-2,y+2) == '.' && x-2 >= 0 && x-2 < Spel.SPEELVELD_GROOTTE && y+2 >= 0 && y+2 < Spel.SPEELVELD_GROOTTE){
+        } if(this.getWaarde(x-2,y+2) == '.' && x-2 >= 0 && x-2 < Spel.SPEELVELD_GROOTTE && y+2 >= 0 && y+2 < Spel.SPEELVELD_GROOTTE){
             lijst.add(new Coordinaat(x-2,y+2));
-        }else if(this.getWaarde(x+2,y-2) == '.' && x+2 >= 0 && x+2 < Spel.SPEELVELD_GROOTTE && y-2 >= 0 && y-2 < Spel.SPEELVELD_GROOTTE){
+        } if(this.getWaarde(x+2,y-2) == '.' && x+2 >= 0 && x+2 < Spel.SPEELVELD_GROOTTE && y-2 >= 0 && y-2 < Spel.SPEELVELD_GROOTTE){
             lijst.add(new Coordinaat(x+2,y-2));
         }
         return lijst;
@@ -224,19 +293,19 @@ public class Bord {
         ArrayList<Coordinaat> lijst = new ArrayList<Coordinaat>();
         if (this.getWaarde(x + 1, y) == '.' && x + 1 >= 0 && x + 1 < Spel.SPEELVELD_GROOTTE) {
             lijst.add(new Coordinaat(x + 1, y));
-        } else if (this.getWaarde(x - 1, y) == '.' && x - 1 >= 0 && x - 1 < Spel.SPEELVELD_GROOTTE) {
+        } if (this.getWaarde(x - 1, y) == '.' && x - 1 >= 0 && x - 1 < Spel.SPEELVELD_GROOTTE) {
             lijst.add(new Coordinaat(x - 1, y));
-        } else if (this.getWaarde(x + 1, y + 1) == '.' && x + 1 >= 0 && x + 1 < Spel.SPEELVELD_GROOTTE && y + 1 >= 0 && y + 1 < Spel.SPEELVELD_GROOTTE) {
+        } if (this.getWaarde(x + 1, y + 1) == '.' && x + 1 >= 0 && x + 1 < Spel.SPEELVELD_GROOTTE && y + 1 >= 0 && y + 1 < Spel.SPEELVELD_GROOTTE) {
             lijst.add(new Coordinaat(x + 1, y + 1));
-        } else if (this.getWaarde(x + 1, y - 1) == '.' && x + 1 >= 0 && x + 1 < Spel.SPEELVELD_GROOTTE && y - 1 >= 0 && y - 1 < Spel.SPEELVELD_GROOTTE) {
+        } if (this.getWaarde(x + 1, y - 1) == '.' && x + 1 >= 0 && x + 1 < Spel.SPEELVELD_GROOTTE && y - 1 >= 0 && y - 1 < Spel.SPEELVELD_GROOTTE) {
             lijst.add(new Coordinaat(x + 1, y - 1));
-        } else if (this.getWaarde(x, y + 1) == '.' && y + 1 >= 0 && y + 1 < Spel.SPEELVELD_GROOTTE) {
+        } if (this.getWaarde(x, y + 1) == '.' && y + 1 >= 0 && y + 1 < Spel.SPEELVELD_GROOTTE) {
             lijst.add(new Coordinaat(x, y + 1));
-        } else if (this.getWaarde(x - 1, y - 1) == '.' && y - 1 >= 0 && y - 1 < Spel.SPEELVELD_GROOTTE && x + 1 >= 0 && x - 1 < Spel.SPEELVELD_GROOTTE) {
+        } if (this.getWaarde(x - 1, y - 1) == '.' && y - 1 >= 0 && y - 1 < Spel.SPEELVELD_GROOTTE && x + 1 >= 0 && x - 1 < Spel.SPEELVELD_GROOTTE) {
             lijst.add(new Coordinaat(x - 1, y - 1));
-        } else if (this.getWaarde(x - 1, y + 1) == '.' && x - 1 >= 0 && x - 1 < Spel.SPEELVELD_GROOTTE && y + 1 >= 0 && y + 1 < Spel.SPEELVELD_GROOTTE) {
+        } if (this.getWaarde(x - 1, y + 1) == '.' && x - 1 >= 0 && x - 1 < Spel.SPEELVELD_GROOTTE && y + 1 >= 0 && y + 1 < Spel.SPEELVELD_GROOTTE) {
             lijst.add(new Coordinaat(x - 1, y + 1));
-        } else if (this.getWaarde(x + 1, y - 1) == '.' && x + 1 >= 0 && x + 1 < Spel.SPEELVELD_GROOTTE && y - 1 >= 0 && y - 1 < Spel.SPEELVELD_GROOTTE) {
+        } if (this.getWaarde(x + 1, y - 1) == '.' && x + 1 >= 0 && x + 1 < Spel.SPEELVELD_GROOTTE && y - 1 >= 0 && y - 1 < Spel.SPEELVELD_GROOTTE) {
             lijst.add(new Coordinaat(x + 1, y - 1));
         }
         return lijst;
@@ -287,7 +356,7 @@ public class Bord {
         //willekeurige zet:
 
         Random rand = new Random();
-        int zetType = rand.nextInt(2);
+        int zetType = rand.nextInt(1);
         for (int i = 0; i < Spel.SPEELVELD_GROOTTE; i++) {
             for (int j = 0; j < Spel.SPEELVELD_GROOTTE; j++) {
                 if (this.getWaarde(i,j) == huidigeSpeler) {
