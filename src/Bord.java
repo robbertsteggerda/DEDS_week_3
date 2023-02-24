@@ -120,8 +120,8 @@ public class Bord {
             int index = (int) (Math.random() * mogelijkeStartCoordinaten.size());
             int doelIndex = (int) (Math.random() * mogelijkeStartCoordinaten.get(index).getDoelen().size());
 
-          //  ArrayList<Coordinaat> mogelijkeDoelenLijst = new ArrayList<Coordinaat>();
-           // ArrayList<Coordinaat> doelenLijst = new ArrayList<Coordinaat>();
+            //  ArrayList<Coordinaat> mogelijkeDoelenLijst = new ArrayList<Coordinaat>();
+            // ArrayList<Coordinaat> doelenLijst = new ArrayList<Coordinaat>();
             //  for (int j = 0; j < mogelijkeStartCoordinaten.size(); j++) {
             //     mogelijkeDoelenLijst.addAll(this.vindLegaleDuplicaties(mogelijkeStartCoordinaten.get(j).getX(),mogelijkeStartCoordinaten.get(j).getY()));
             //      if(this.isAangrenzendAanTegenstander(mogelijkeDoelenLijst.get(j).getX(),mogelijkeStartCoordinaten.get(j).getY(),huidigeSpeler)){
@@ -135,14 +135,16 @@ public class Bord {
             //          }
 
             //       }
-        }
-        Random rand = new Random();
 
-        if (doelY == -1) {
-            doelY = rand.nextInt(6);
-        }
-        if (doelX == -1) {
-            doelX = rand.nextInt(6);
+            doelY = mogelijkeStartCoordinaten.get(index).getDoelen().get(doelIndex).getY();
+            doelX = mogelijkeStartCoordinaten.get(index).getDoelen().get(doelIndex).getX();
+
+            if (doelY == -1) {
+                doelY = rand.nextInt(6);
+            }
+            if (doelX == -1) {
+                doelX = rand.nextInt(6);
+            }
         }
 
 
