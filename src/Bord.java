@@ -70,13 +70,13 @@ public class Bord {
     public void zetBeginStand() {
         for (int x = 0; x < Spel.SPEELVELD_GROOTTE; x++) {
             for (int y = 0; y < Spel.SPEELVELD_GROOTTE; y++) {
-                this.setWaarde(x, y, 'B');
+                this.setWaarde(x, y, '.');
             }
         }
         this.setWaarde(6, 0, 'H');
-        this.setWaarde(6, 1, '.');
+        this.setWaarde(6, 1, 'H');
         this.setWaarde(5, 0, 'H');
-        this.setWaarde(5, 1, '.');
+        this.setWaarde(5, 1, 'H');
 
         this.setWaarde(0, 5, 'B');
         this.setWaarde(0, 6, 'B');
@@ -137,7 +137,7 @@ public class Bord {
             System.out.println("voer het Y coordinaat van je doel in: ");
             doelX = scanner.nextInt();
         } else{
-            //DIt stuk code zorgt ervoor dat de computer alleen van coordinaten springt waarvan het vakje van hem is
+            //Dit stuk code zorgt ervoor dat de computer alleen van coordinaten springt waarvan het vakje van hem is
             Random rand = new Random();
             ArrayList<Coordinaat>  mogelijkeStartCoordinaten = new ArrayList<Coordinaat>();
             mogelijkeStartCoordinaten.clear();
@@ -145,18 +145,19 @@ public class Bord {
                 for (int j = 0; j < Spel.SPEELVELD_GROOTTE; j++) {
                     if (this.getWaarde(i, j) == huidigeSpeler) {
                         if(isLegaleSprongMogelijk(i,j)){
-                            mogelijkeStartCoordinaten.add(new Coordinaat(i,j));
+                            mogelijkeStartCoordinaten.add(new Coordinaat(i,j, (ArrayList<Coordinaat>) (vindLegaleSprongen(i,j)).clone()));
                         }
                     }
                 }
             }
 
             int index = (int)(Math.random() * mogelijkeStartCoordinaten.size());
+            int doelIndex = (int) (Math.random()*mogelijkeStartCoordinaten.get(index).getDoelen().size());
 
             startY = rand.nextInt(mogelijkeStartCoordinaten.get(index).getY()+1);
             startX = rand.nextInt(mogelijkeStartCoordinaten.get(index).getX()+1);
-            doelY = rand.nextInt(7);
-            doelX = rand.nextInt(7);
+            doelY = rand.nextInt(mogelijkeStartCoordinaten.get(index).getDoelen().get(doelIndex).getY());
+            doelX = rand.nextInt(mogelijkeStartCoordinaten.get(index).getDoelen().get(doelIndex).getX());
         }
 
         if (Spel.isBuitenSpeelveld(doelX) || Spel.isBuitenSpeelveld(doelY)) {
@@ -196,6 +197,49 @@ public class Bord {
             return (Spel.wisselSpeler(huidigeSpeler));
        // }
       //  return 'B';
+    }
+
+    private ArrayList<Coordinaat> vindLegaleSprongen(int x, int y) {
+        ArrayList<Coordinaat> lijst = new ArrayList<Coordinaat>();
+        if(this.getWaarde(x+2,y) == '.' && x+2 >= 0 && x+2 < Spel.SPEELVELD_GROOTTE){
+            lijst.add(new Coordinaat(x+2,y));
+        }else if(this.getWaarde(x-2,y) == '.' && x-2 >= 0 && x-2 < Spel.SPEELVELD_GROOTTE){
+            lijst.add(new Coordinaat(x-2,y));
+        }else if(this.getWaarde(x+2,y+2) == '.' && x+2 >= 0 && x+2 < Spel.SPEELVELD_GROOTTE && y+2 >= 0 && y+2 < Spel.SPEELVELD_GROOTTE){
+            lijst.add(new Coordinaat(x+2,y+2));
+        }else if(this.getWaarde(x+2,y-2) == '.' && x+2 >= 0 && x+2 < Spel.SPEELVELD_GROOTTE && y-2 >= 0 && y-2 < Spel.SPEELVELD_GROOTTE){
+            lijst.add(new Coordinaat(x+2,y-2));
+        }else if(this.getWaarde(x,y+2) == '.' && y+2 >= 0 && y+2 < Spel.SPEELVELD_GROOTTE){
+            lijst.add(new Coordinaat(x,y+2));
+        }else if(this.getWaarde(x-2,y-2) == '.' && y-2 >= 0 && y-2 < Spel.SPEELVELD_GROOTTE && x-2 >= 0 && x-2 < Spel.SPEELVELD_GROOTTE){
+            lijst.add(new Coordinaat(x-2,y-2));
+        }else if(this.getWaarde(x-2,y+2) == '.' && x-2 >= 0 && x-2 < Spel.SPEELVELD_GROOTTE && y+2 >= 0 && y+2 < Spel.SPEELVELD_GROOTTE){
+            lijst.add(new Coordinaat(x-2,y+2));
+        }else if(this.getWaarde(x+2,y-2) == '.' && x+2 >= 0 && x+2 < Spel.SPEELVELD_GROOTTE && y-2 >= 0 && y-2 < Spel.SPEELVELD_GROOTTE){
+            lijst.add(new Coordinaat(x+2,y-2));
+        }
+        return lijst;
+    }
+    private ArrayList<Coordinaat> vindLegaleDuplicaties(int x, int y) {
+        ArrayList<Coordinaat> lijst = new ArrayList<Coordinaat>();
+        if (this.getWaarde(x + 1, y) == '.' && x + 1 >= 0 && x + 1 < Spel.SPEELVELD_GROOTTE) {
+            lijst.add(new Coordinaat(x + 1, y));
+        } else if (this.getWaarde(x - 1, y) == '.' && x - 1 >= 0 && x - 1 < Spel.SPEELVELD_GROOTTE) {
+            lijst.add(new Coordinaat(x - 1, y));
+        } else if (this.getWaarde(x + 1, y + 1) == '.' && x + 1 >= 0 && x + 1 < Spel.SPEELVELD_GROOTTE && y + 1 >= 0 && y + 1 < Spel.SPEELVELD_GROOTTE) {
+            lijst.add(new Coordinaat(x + 1, y + 1));
+        } else if (this.getWaarde(x + 1, y - 1) == '.' && x + 1 >= 0 && x + 1 < Spel.SPEELVELD_GROOTTE && y - 1 >= 0 && y - 1 < Spel.SPEELVELD_GROOTTE) {
+            lijst.add(new Coordinaat(x + 1, y - 1));
+        } else if (this.getWaarde(x, y + 1) == '.' && y + 1 >= 0 && y + 1 < Spel.SPEELVELD_GROOTTE) {
+            lijst.add(new Coordinaat(x, y + 1));
+        } else if (this.getWaarde(x - 1, y - 1) == '.' && y - 1 >= 0 && y - 1 < Spel.SPEELVELD_GROOTTE && x + 1 >= 0 && x - 1 < Spel.SPEELVELD_GROOTTE) {
+            lijst.add(new Coordinaat(x - 1, y - 1));
+        } else if (this.getWaarde(x - 1, y + 1) == '.' && x - 1 >= 0 && x - 1 < Spel.SPEELVELD_GROOTTE && y + 1 >= 0 && y + 1 < Spel.SPEELVELD_GROOTTE) {
+            lijst.add(new Coordinaat(x - 1, y + 1));
+        } else if (this.getWaarde(x + 1, y - 1) == '.' && x + 1 >= 0 && x + 1 < Spel.SPEELVELD_GROOTTE && y - 1 >= 0 && y - 1 < Spel.SPEELVELD_GROOTTE) {
+            lijst.add(new Coordinaat(x + 1, y - 1));
+        }
+        return lijst;
     }
 
     public boolean isLegaleSprong(int startX, int startY, int doelX, int doelY) {
