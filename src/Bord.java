@@ -7,6 +7,15 @@ public class Bord {
     private boolean spelVoorbij;
     private char[][] speelveld;
     private static Stapel stapel = new Stapel();
+    private int aantalZetten = 0;
+
+    public int getAantalZetten() {
+        return aantalZetten;
+    }
+
+    public void setAantalZetten(int aantalZetten) {
+        this.aantalZetten = aantalZetten;
+    }
 
     public void setSpelVoorbij() {
         this.spelVoorbij = true;
@@ -86,8 +95,8 @@ public class Bord {
 
     public char dupliceer(char huidigeSpeler) {
         //sla alleen het bord op/vraag om coordinaten als de huidige speler niet de computer is.
-        int doelY = 0;
-        int doelX = 0;
+        int doelY = -1;
+        int doelX = -1;
         if (huidigeSpeler == 'H') {
             slaBordOp();
 
@@ -118,7 +127,6 @@ public class Bord {
             //als dit niet kan, doet hij een willekeurige sprong
             //helaas werkt dit niet helemaal
             int index = (int) (Math.random() * mogelijkeStartCoordinaten.size());
-            int doelIndex = (int) (Math.random() * mogelijkeStartCoordinaten.get(index).getDoelen().size());
 
           //  ArrayList<Coordinaat> mogelijkeDoelenLijst = new ArrayList<Coordinaat>();
            // ArrayList<Coordinaat> doelenLijst = new ArrayList<Coordinaat>();
@@ -138,6 +146,24 @@ public class Bord {
         }
         Random rand = new Random();
 
+         ArrayList<Coordinaat>mogelijkeDuplicaties = new ArrayList<Coordinaat>();
+         mogelijkeDuplicaties.clear();
+
+        for (int i = 0; i < Spel.SPEELVELD_GROOTTE; i++) {
+            for (int j = 0; j < Spel.SPEELVELD_GROOTTE; j++) {
+                if (this.getWaarde(i, j) == huidigeSpeler) {
+                    if (isLegaleDuplicatieMogelijk(i, j)) {
+                        mogelijkeDuplicaties.add(new Coordinaat(i, j, (ArrayList<Coordinaat>) (vindLegaleDuplicaties(i, j)).clone()));
+                    }
+                }
+            }
+        }
+        int doelIndex = (int) (Math.random() * mogelijkeDuplicaties.size());
+
+        if(mogelijkeDuplicaties.size() > 0) {
+            doelY = mogelijkeDuplicaties.get(doelIndex).getY();
+            doelX = mogelijkeDuplicaties.get(doelIndex).getX();
+        }
         if (doelY == -1) {
             doelY = rand.nextInt(6);
         }
@@ -215,9 +241,6 @@ public class Bord {
          //               doelX = doelenLijst.get(i).getX();
         //                doelY = doelenLijst.get(i).getY();
          //           }
-
-
-
 
             startY = rand.nextInt(mogelijkeStartCoordinaten.get(index).getY()+1);
             startX = rand.nextInt(mogelijkeStartCoordinaten.get(index).getX()+1);
@@ -352,7 +375,7 @@ public class Bord {
             return false;
     }
 
-    public char willekeurigeRobotZet(char huidigeSpeler) {
+    public char willekeurigeRobotZet(char huidigeSpeler, int aantalZetten) {
         //willekeurige zet:
 
         Random rand = new Random();
@@ -380,10 +403,12 @@ public class Bord {
                 }
             }
         }
-        if (zetType == 0) {
-            return this.spring(huidigeSpeler);
-        }else{
+        //de computerstrategie is dat hij altijd de eerste vijf zetten een duplicatie doet
+        //hiermee bouwt hij zijn aantal stukken op
+        if (zetType == 0 || aantalZetten < 5) {
             return this.dupliceer(huidigeSpeler);
+        }else{
+            return this.spring(huidigeSpeler);
         }
     }
 

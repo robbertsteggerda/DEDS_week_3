@@ -48,7 +48,7 @@ public class Spel {
             bord.printBord();
             System.out.println(huidigeSpeler + " is aan de beurt.");
             while(huidigeSpeler == 'B'){
-                huidigeSpeler = bord.willekeurigeRobotZet(huidigeSpeler);
+                huidigeSpeler = bord.willekeurigeRobotZet(huidigeSpeler,bord.getAantalZetten());
             }
 
             bord.printBord();
@@ -101,6 +101,11 @@ public class Spel {
                     bord.printBord();
                     bord.setSpelVoorbij();
                 }
+            }
+            if(huidigeSpeler == 'H'){
+                int aantalZetten = bord .getAantalZetten();
+                aantalZetten++;
+                bord.setAantalZetten(aantalZetten);
             }
         }
     }
