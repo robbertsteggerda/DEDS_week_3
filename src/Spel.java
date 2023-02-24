@@ -8,6 +8,7 @@ public class Spel {
     private static int puntTeller;
     public static boolean HHeeftZetten = true;
     public static boolean BHeeftZetten = true;
+    public static boolean isZetTeruggezet = false;
 
     //deze methode kiest een willekeurige speler
     private static char kiesBeginnendeSpeler() {
@@ -51,6 +52,7 @@ public class Spel {
                 huidigeSpeler = bord.willekeurigeRobotZet(huidigeSpeler);
             }
 
+            System.out.println("Aantal zetten " + bord.getAantalZetten());
             bord.printBord();
             int keuze = kiesZetType();
             if(keuze == 1) {
@@ -58,7 +60,11 @@ public class Spel {
             }else if(keuze == 2){
                 huidigeSpeler = bord.spring(huidigeSpeler);
             }else if(keuze == 3){
-                    bord.zetBordTerug();
+                int aantalZetten = bord.getAantalZetten();
+                aantalZetten--;
+                bord.setAantalZetten(aantalZetten);
+                isZetTeruggezet = true;
+                bord.zetBordTerug();
                 } else{
                 System.out.println("ongeldige keuze, kies opnieuw a.u.b.");
             }
@@ -103,9 +109,13 @@ public class Spel {
                     bord.setSpelVoorbij();
                 }
             }
+            if(!isZetTeruggezet) {
                 int aantalZetten = bord.getAantalZetten();
                 aantalZetten++;
                 bord.setAantalZetten(aantalZetten);
+            }else{
+                isZetTeruggezet = false;
+            }
         }
     }
 
