@@ -98,14 +98,15 @@ public class Bord {
             doelX = scanner.nextInt();
             //willekeurige zet van de computer
         } else {
+            //Dit stuk code zorgt ervoor dat de computer alleen van coordinaten springt waarvan het vakje van hem is
             Random rand = new Random();
-            ArrayList<Coordinaat> mogelijkeStartCoordinaten = new ArrayList<Coordinaat>();
+            ArrayList<Coordinaat>  mogelijkeStartCoordinaten = new ArrayList<Coordinaat>();
             mogelijkeStartCoordinaten.clear();
             for (int i = 0; i < Spel.SPEELVELD_GROOTTE; i++) {
                 for (int j = 0; j < Spel.SPEELVELD_GROOTTE; j++) {
                     if (this.getWaarde(i, j) == huidigeSpeler) {
-                        if (isLegaleDuplicatieMogelijk(i, j)) {
-                            mogelijkeStartCoordinaten.add(new Coordinaat(i, j, (ArrayList<Coordinaat>) (vindLegaleDuplicaties(i, j)).clone()));
+                        if(isLegaleDuplicatieMogelijk(i,j)){
+                            mogelijkeStartCoordinaten.add(new Coordinaat(i,j, (ArrayList<Coordinaat>) (vindLegaleDuplicaties(i,j)).clone()));
                         }
                     }
                 }
@@ -115,27 +116,32 @@ public class Bord {
             //vanaf één van deze vakjes probeert hij naast de tegenstander te gaan staan
             //als dit kan, doet hij een zet waarbij hij naast een tegenstander gaat staan
             //als dit niet kan, doet hij een willekeurige sprong
-            int index = (int) (Math.random() * mogelijkeStartCoordinaten.size());
-            int doelIndex = (int) (Math.random() * mogelijkeStartCoordinaten.get(index).getDoelen().size());
+            //helaas werkt dit niet helemaal
+            int index = (int)(Math.random() * mogelijkeStartCoordinaten.size());
+            int doelIndex = (int) (Math.random()*mogelijkeStartCoordinaten.get(index).getDoelen().size());
 
-            doelX = -1;
-            doelY = -1;
+            ArrayList<Coordinaat> mogelijkeDoelenLijst = new ArrayList<Coordinaat>();
+            ArrayList<Coordinaat> doelenLijst = new ArrayList<Coordinaat>();
             for (int j = 0; j < mogelijkeStartCoordinaten.size(); j++) {
+                mogelijkeDoelenLijst.addAll(this.vindLegaleDuplicaties(mogelijkeStartCoordinaten.get(j).getX(),mogelijkeStartCoordinaten.get(j).getY()));
+                if(this.isAangrenzendAanTegenstander(mogelijkeDoelenLijst.get(j).getX(),mogelijkeStartCoordinaten.get(j).getY(),huidigeSpeler)){
+                    doelenLijst.add(mogelijkeDoelenLijst.get(j));
+                }
                 for (int i = 0; i < mogelijkeStartCoordinaten.get(j).getDoelen().size(); i++) {
-                    ArrayList<Coordinaat> doelenLijst = new ArrayList<Coordinaat>();
-                    doelenLijst = mogelijkeStartCoordinaten.get(index).getDoelen();
+                    doelenLijst.addAll(mogelijkeStartCoordinaten.get(j).getDoelen());
                     if (this.isAangrenzendAanTegenstander(doelenLijst.get(i).getX(), doelenLijst.get(i).getY(), huidigeSpeler)) {
                         doelX = doelenLijst.get(i).getX();
                         doelY = doelenLijst.get(i).getY();
                     }
+
                 }
             }
 
-            if (doelY == -1) {
-                doelY = rand.nextInt(mogelijkeStartCoordinaten.get(index).getDoelen().get(doelIndex).getY());
+            if(doelY == -1) {
+                doelY = rand.nextInt(6);
             }
-            if (doelX == -1) {
-                doelX = rand.nextInt(mogelijkeStartCoordinaten.get(index).getDoelen().get(doelIndex).getX());
+            if(doelX == -1) {
+                doelX = rand.nextInt(6);
             }
         }
 
@@ -192,6 +198,7 @@ public class Bord {
             //vanaf één van deze vakjes probeert hij naast de tegenstander te gaan staan
             //als dit kan, doet hij een zet waarbij hij naast een tegenstander gaat staan
             //als dit niet kan, doet hij een willekeurige sprong
+            //helaas werkt dit niet helemaal
             int index = (int)(Math.random() * mogelijkeStartCoordinaten.size());
             int doelIndex = (int) (Math.random()*mogelijkeStartCoordinaten.get(index).getDoelen().size());
 
@@ -376,7 +383,7 @@ public class Bord {
         if (zetType == 0) {
             return this.spring(huidigeSpeler);
         }else{
-            return this.spring(huidigeSpeler);
+            return this.dupliceer(huidigeSpeler);
         }
     }
 
