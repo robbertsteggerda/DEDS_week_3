@@ -156,6 +156,7 @@ public class Bord {
             }
             return (huidigeSpeler);
         } else {
+            System.out.println("duplicating...");
             this.setWaarde(doelX, doelY, huidigeSpeler);
             vervangAangrenzendAanTegenstander(doelX, doelY, huidigeSpeler);
             return (Spel.wisselSpeler(huidigeSpeler));
