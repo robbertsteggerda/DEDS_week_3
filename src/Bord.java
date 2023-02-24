@@ -200,10 +200,10 @@ public class Bord {
             for (int j = 0; j < mogelijkeStartCoordinaten.size(); j++) {
                 mogelijkeDoelenLijst.addAll(this.vindLegaleSprongen(mogelijkeStartCoordinaten.get(j).getX(),mogelijkeStartCoordinaten.get(j).getY()));
                 if(this.isAangrenzendAanTegenstander(mogelijkeDoelenLijst.get(j).getX(),mogelijkeStartCoordinaten.get(j).getY(),huidigeSpeler)){
-                    doelenLijst.add(mogelijkeStartCoordinaten.get(j));
+                    doelenLijst.add(mogelijkeDoelenLijst.get(j));
                 }
                 for (int i = 0; i < mogelijkeStartCoordinaten.get(j).getDoelen().size(); i++) {
-                    doelenLijst.addAll(mogelijkeStartCoordinaten.get(index).getDoelen());
+                    doelenLijst.addAll(mogelijkeStartCoordinaten.get(j).getDoelen());
                     if (this.isAangrenzendAanTegenstander(doelenLijst.get(i).getX(), doelenLijst.get(i).getY(), huidigeSpeler)) {
                         doelX = doelenLijst.get(i).getX();
                         doelY = doelenLijst.get(i).getY();
