@@ -7,6 +7,15 @@ public class Bord {
     private boolean spelVoorbij;
     private char[][] speelveld;
     private static Stapel stapel = new Stapel();
+    private int aantalZetten = 0;
+
+    public void setAantalZetten(int aantalZetten) {
+        this.aantalZetten = aantalZetten;
+    }
+
+    public int getAantalZetten() {
+        return aantalZetten;
+    }
 
     public void setSpelVoorbij() {
         this.spelVoorbij = true;
@@ -133,11 +142,13 @@ public class Bord {
             //              doelX = doelenLijst.get(i).getX();
             //              doelY = doelenLijst.get(i).getY();
             //          }
-
             //       }
 
-            doelY = mogelijkeStartCoordinaten.get(index).getDoelen().get(doelIndex).getY();
-            doelX = mogelijkeStartCoordinaten.get(index).getDoelen().get(doelIndex).getX();
+            while(mogelijkeStartCoordinaten.get(index).getDoelen().size() == 0){
+                index = (int) (Math.random() * mogelijkeStartCoordinaten.size());
+            }
+                doelY = mogelijkeStartCoordinaten.get(index).getDoelen().get(doelIndex).getY();
+                doelX = mogelijkeStartCoordinaten.get(index).getDoelen().get(doelIndex).getX();
 
             if (doelY == -1) {
                 doelY = rand.nextInt(6);
@@ -217,9 +228,6 @@ public class Bord {
          //               doelX = doelenLijst.get(i).getX();
         //                doelY = doelenLijst.get(i).getY();
          //           }
-
-
-
 
             startY = rand.nextInt(mogelijkeStartCoordinaten.get(index).getY()+1);
             startX = rand.nextInt(mogelijkeStartCoordinaten.get(index).getX()+1);
@@ -362,7 +370,8 @@ public class Bord {
         for (int i = 0; i < Spel.SPEELVELD_GROOTTE; i++) {
             for (int j = 0; j < Spel.SPEELVELD_GROOTTE; j++) {
                 if (this.getWaarde(i,j) == huidigeSpeler) {
-                    if (!this.isLegaleSprongMogelijk(i, j)) {
+                    //indien aantal zetten kleiner is dan vijf: doe een duplicatie als dit mogelijk is
+                    if (!this.isLegaleSprongMogelijk(i, j) || this.getAantalZetten() < 5) {
                         zetType = 1;
                     }else{
                         zetType = rand.nextInt(2);

@@ -75,6 +75,7 @@ public class Spel {
             }
 
             System.out.println("score: H = " + Spel.Hteller + " B = " + Spel.Bteller);
+            System.out.println("Aantal zetten: " + bord.getAantalZetten());
 
             if(Bteller == 0){
                 System.out.println("H heeft gewonnen!");
@@ -102,6 +103,9 @@ public class Spel {
                     bord.setSpelVoorbij();
                 }
             }
+                int aantalZetten = bord.getAantalZetten();
+                aantalZetten++;
+                bord.setAantalZetten(aantalZetten);
         }
     }
 
