@@ -9,6 +9,18 @@
 //Hierdor wordt zijn aantal vakjes opgebouwd aan het begin.
 //Ik wilde iets beters maken, maar dit lukte binnen de tijd helaas niet.
 
+/*
+Willekeurige zet: er zijn checks om te testen of een legale sprong/duplicatie mogelijk is.
+De mogelijke zetten worden in een ArrayList gezet, en één van deze zetten wordt willekeurig gekozen
+De strategie van de computer is om de eerste vijf zetten indien dit mogelijk is altijd een duplicatie
+te doen. Op deze manier worden zijn velden opgebouwd aan het begin van het spel.
+
+Ik wilde eerst proberen om indien mogelijk de computer altijd naast een veld van de tegenstander te
+laten gaan, daarom ook de uitgecommente code. Helaas is dat binnen de tijd niet gelukt. Daarom heb ik
+voor deze simpelere optie gekozen.
+
+Ik heb ook overwogen om voor een Monte Carlo analyse te gaan, maar op hier had ik helaas geen tijd voor.
+*/
 public class Main {
     public static void main(String[] args) throws LegeStapelException {
         Spel.startSpel();

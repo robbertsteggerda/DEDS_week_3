@@ -49,7 +49,7 @@ public class Spel {
             bord.printBord();
             System.out.println(huidigeSpeler + " is aan de beurt.");
             while(huidigeSpeler == 'B'){
-                huidigeSpeler = bord.willekeurigeRobotZet(huidigeSpeler);
+                huidigeSpeler = bord.robotZet(huidigeSpeler);
             }
 
             System.out.println("Aantal zetten " + bord.getAantalZetten());
